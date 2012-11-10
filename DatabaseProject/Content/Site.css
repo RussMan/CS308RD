@@ -1,4 +1,9 @@
-﻿html {
+﻿/*NOTE: If modifying this file and changes do not seem
+        to be taking any affect on the views, first
+        reccomendation is to clear the cache of the
+        browswer being used to run the application.
+*/
+html {
     background-color: #e2e2e2;
     margin: 0;
     padding: 0;
@@ -6,7 +11,7 @@
 
 body {
     background-color: #fff;
-    border-top: solid 10px #000;
+    border-top: solid 10px #fff; /*changed from #000 because the border-top was unnecessary*/
     color: #333;
     font-size: .85em;
     font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
@@ -28,7 +33,7 @@ a {
     }
 
     a:hover {
-        background-color: #c7d1d6;
+        /*background-color: #c7d1d6;*/ /*Don't need link over color*/
     }
 
 header, footer, hgroup,
@@ -115,7 +120,7 @@ h5, h6 {
     }
 
 header .content-wrapper {
-    padding-top: 20px; 
+    padding-top: 0px; /*changed from 20, I believe it was to remove the random border up at the ver top*/
 }
 
 footer {
@@ -132,7 +137,7 @@ footer {
     color: #c8c8c8;
     font-family: Rockwell, Consolas, "Courier New", Courier, monospace;
     font-size: 2.3em;
-    margin: 0;
+    margin: 20; /*Changed from 0 because the it was overlapping with the navbar*/
 }
 
 .site-title a, .site-title a:hover, .site-title a:active {
@@ -153,8 +158,8 @@ footer {
 }
 
     #login a {
-        background-color: #d3dce0;
-        margin-left: 10px;
+        /*background-color: ##d3dce0;*/ /*not needed for buttons*/
+        margin-left: 3px; /*Was 10px default, made even since using bootstrap*/
         margin-right: 3px;
         padding: 2px 3px;
         text-decoration: none;
