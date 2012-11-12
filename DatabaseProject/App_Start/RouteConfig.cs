@@ -13,6 +13,12 @@ namespace DatabaseProject
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            routes.MapRoute( // This is the route configuration to access the content section of the website
+                name: "ContentItem",
+                url: "ContentItem/{action}",
+                defaults: new { controller = "ContentItem", action = "Index" }
+            );
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

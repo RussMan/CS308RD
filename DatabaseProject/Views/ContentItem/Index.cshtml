@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="hero-unit">
+            <h2>@ViewBag.Message</h2>
+            <p>This is will be one of the "extra features" we will implement. The titles of the
+            latest entered topics from people within the user's friends will be displayed here.</p>
+            <p><a href="http://asp.net/mvc" class="btn btn-primary btn-large" 
+              style="color: White;">To learn more about ASP.NET MVC visit &raquo;</a></p>
+        </div>
+    </section>
+}
+<h2>Find a post!</h2>
+<form class="navbar-search pull-left">
+    <a class="btn btn-medium dropdown-toggle" type="submit" data-toggle="dropdown">
+        Search by
+        <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" role="menu" >
+        <li><a tabindex="-1" href="#">Topic</a></li>
+        <li><a tabindex="-1" href="#">Title</a></li>
+        <li><a tabindex="-1" href="#">Something else here</a></li>
+        <li><a tabindex="-1" href="#">Derp</a></li>
+    </ul>
+    <input type="text" class="search-query" placeholder="Search">
+</form>

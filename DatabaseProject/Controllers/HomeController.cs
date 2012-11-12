@@ -17,7 +17,7 @@ namespace DatabaseProject.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your app description page.";
+            ViewBag.Message = "Your app description page. Here is the featured section of the About page!";
 
             return View();
         }
