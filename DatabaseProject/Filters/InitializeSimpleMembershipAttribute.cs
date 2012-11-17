@@ -18,7 +18,7 @@ namespace DatabaseProject.Filters
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             // Ensure ASP.NET Simple Membership is initialized only once per app start
-            LazyInitializer.EnsureInitialized(ref _initializer, ref _isInitialized, ref _initializerLock);
+            //LazyInitializer.EnsureInitialized(ref _initializer, ref _isInitialized, ref _initializerLock); //Removed to get rid of TargetOfInvocation Exception
         }
 
         private class SimpleMembershipInitializer
@@ -38,7 +38,8 @@ namespace DatabaseProject.Filters
                         }
                     }
 
-                    WebSecurity.InitializeDatabaseConnection("DefaultConnection", "UserProfile", "UserId", "UserName", autoCreateTables: true);
+                    //WebSecurity.InitializeDatabaseConnection("DefaultConnection", "UserProfile", "UserId", "UserName", autoCreateTables: true);
+                    WebSecurity.InitializeDatabaseConnection("MySqlConnString", "person", "pid", "fname", autoCreateTables: false);
                 }
                 catch (Exception ex)
                 {

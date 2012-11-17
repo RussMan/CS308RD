@@ -10,6 +10,8 @@ using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using DatabaseProject.Filters;
 using DatabaseProject.Models;
+using MySql.Data.MySqlClient;
+using System.Configuration;
 
 namespace DatabaseProject.Controllers
 {
@@ -35,9 +37,13 @@ namespace DatabaseProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+            if (ModelState.IsValid /*&& WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe)*/)
             {
-                return RedirectToLocal(returnUrl);
+                if(model.isValid(model.FirstName, model.LastName, model.Password))
+                {
+                    FormsAuthentication.SetAuthCookie(model.LastName, model.RememberMe);
+                    return RedirectToLocal(returnUrl);
+                }
             }
 
             // If we got this far, something failed, redisplay form
@@ -52,7 +58,8 @@ namespace DatabaseProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            WebSecurity.Logout();
+            //WebSecurity.Logout();
+            FormsAuthentication.SignOut();
 
             return RedirectToAction("Index", "Home");
         }
@@ -79,9 +86,23 @@ namespace DatabaseProject.Controllers
                 // Attempt to register the user
                 try
                 {
-                    WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-                    WebSecurity.Login(model.UserName, model.Password);
-                    return RedirectToAction("Index", "Home");
+                    //WebSecurity.CreateUserAndAccount(model.UserName, model.Password); //Replaced with below
+                    using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
+                    {
+                        if (connection.State != System.Data.ConnectionState.Open)
+                            connection.Open();
+                        MySqlCommand command = new MySqlCommand("INSERT INTO person (password, fname, lname)" +
+                                                                "VALUES ('" + model.Password + "', '" + model.FirstName + "', '" + model.LastName + "');", connection);
+                        command.ExecuteNonQuery(); //Only for GET BY ID, DELETE, UPDATE, and INSERT statements -> returning a single row/tuple
+
+                    }
+                    //WebSecurity.Login(model.FirstName, model.Password);
+                    LoginModel user = new LoginModel(); //Convert from RegisterModel to LoginModel
+                    user.FirstName = model.FirstName; 
+                    user.LastName = model.LastName;
+                    user.Password = model.Password;
+                    Login(user, ViewBag.ReturnUrl); //Jump to login after registering 
+                    return RedirectToAction("Index", "Home"); //CASE 1: Return to Home page
                 }
                 catch (MembershipCreateUserException e)
                 {

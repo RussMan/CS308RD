@@ -1,4 +1,6 @@
-﻿@{
+﻿@*Home/Index view for the ContentItem controller*@
+
+@{
     ViewBag.Title = "Index";
 }
 
@@ -13,17 +15,39 @@
         </div>
     </section>
 }
-<h2>Find a post!</h2>
-<form class="navbar-search pull-left">
-    <a class="btn btn-medium dropdown-toggle" type="submit" data-toggle="dropdown">
-        Search by
-        <span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu" role="menu" >
-        <li><a tabindex="-1" href="#">Topic</a></li>
-        <li><a tabindex="-1" href="#">Title</a></li>
-        <li><a tabindex="-1" href="#">Something else here</a></li>
-        <li><a tabindex="-1" href="#">Derp</a></li>
+
+<div class="tabbable tabs-left pull-left">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#readContent" data-toggle="tab">Read</a>
+        </li>
+        <li>
+            <a href="#writeContent" data-toggle="tab">Write</a>
+        </li>
+        <li>
+            <a href="#editContent" data-toggle="tab">Edit</a>
+        </li>
+        <li>
+            <a href="#deleteContent" data-toggle="tab">Delete</a>
+        </li>
     </ul>
-    <input type="text" class="search-query" placeholder="Search">
-</form>
+    <div class="tab-content">
+        <div class="tab-pane active" id="readContent">
+            <p>Read</p>
+        </div>
+        <div class="tab-pane" id="writeContent">
+            <form method="get" action="@*@Url.Action(insert query function dest. here)*@">
+                <textarea name="postItem" cols="100" rows="5">
+                Type post here...
+                </textarea>
+                <button class="btn" type="submit">Post!</button>
+            </form>
+        </div>
+        <div class="tab-pane" id="editContent">
+            <p>Edit</p>
+        </div>
+        <div class="tab-pane" id="deleteContent">
+            <p>Delete</p>
+        </div>
+    </div> @*--End tab-content*@
+</div> @*--End tabbable*@

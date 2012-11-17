@@ -7,13 +7,15 @@ using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.SqlServer.Server;
+using MySql.Data.MySqlClient;
+using System.Configuration;
 
 namespace DatabaseProject.Models
 {
     public class UsersContext : DbContext
     {
         public UsersContext()
-            : base("DefaultConnection")
+            : base("MySqlConnString")
         {
         }
 
@@ -60,8 +62,12 @@ namespace DatabaseProject.Models
     public class LoginModel
     {
         [Required]
-        [Display(Name = "User name")]
-        public string UserName { get; set; }
+        [Display(Name = "First name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last name")]
+        public string LastName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -70,13 +76,43 @@ namespace DatabaseProject.Models
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+
+        //Custom user validation by querying the database
+        public bool isValid(string firstName, string lastName, string password)
+        {
+            try
+            {
+                string userQueryString = "SELECT * FROM person WHERE password = '" + password + "';";
+                using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
+                {
+                    if(connection.State != System.Data.ConnectionState.Open)
+                        connection.Open();
+                    using (MySqlCommand command = new MySqlCommand(userQueryString, connection))
+                    using (MySqlDataReader dr = command.ExecuteReader())//For returning a set of records, may need to implement a check to retrieve one specific user
+                    {
+                        if (dr.Read()) return true; 
+                        else return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Write("An error occured: " + ex.Message);
+                return false;
+            }
+
+        }
     }
 
     public class RegisterModel
     {
         [Required]
-        [Display(Name = "User name")]
-        public string UserName { get; set; }
+        [Display(Name = "First name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last name")]
+        public string LastName { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
