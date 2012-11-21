@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MySql.Data.MySqlClient;
+using System.Configuration;
 
 namespace DatabaseProject.Controllers
 {
+
     public class ContentItemController : Controller
     {
         //
@@ -19,12 +22,35 @@ namespace DatabaseProject.Controllers
         }
 
         //
-        // GET: /ContentItem/Details/5
-
-        public ActionResult Details(int id)
+        // GET: /ContentItem/GetPosts
+        public ActionResult get_by_topic()
         {
+            string dummy = "";
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
+                {
+                    if (connection.State != System.Data.ConnectionState.Open)
+                        connection.Open();
+                    MySqlCommand command = new MySqlCommand("SELECT * FROM content NATURAL JOIN contopic WHERE topic = 'buttsecks';", connection);
+                    MySqlDataReader dr = command.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        dummy += ("| " + dr.GetString(0) + " |");
+                    }
+                    dr.Close();
+                    connection.Close();//Added close because it was always open
+                    return Content(dummy);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Content("An error occured: " + ex.Message);
+            }
             return View();
         }
+
 
         //
         // GET: /ContentItem/Create

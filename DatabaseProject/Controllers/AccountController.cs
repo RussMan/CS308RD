@@ -94,7 +94,7 @@ namespace DatabaseProject.Controllers
                         MySqlCommand command = new MySqlCommand("INSERT INTO person (password, fname, lname)" +
                                                                 "VALUES ('" + model.Password + "', '" + model.FirstName + "', '" + model.LastName + "');", connection);
                         command.ExecuteNonQuery(); //Only for GET BY ID, DELETE, UPDATE, and INSERT statements -> returning a single row/tuple
-
+                        connection.Close();//Added close because it was always open
                     }
                     //WebSecurity.Login(model.FirstName, model.Password);
                     LoginModel user = new LoginModel(); //Convert from RegisterModel to LoginModel
