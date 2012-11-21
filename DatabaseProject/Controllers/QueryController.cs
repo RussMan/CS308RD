@@ -57,9 +57,8 @@ namespace DatabaseProject.Controllers
             return View();
         }
 
-        public ActionResult get_by_topic(string TOPIC)
-        {   //Get post ID
-            string dummy = "";
+        public ActionResult get_post_by_topic(string TOPIC)
+        {   //Get the post by topic
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
@@ -72,6 +71,58 @@ namespace DatabaseProject.Controllers
                     while(dr.Read())
                     {
                         
+                    }
+                    dr.Close();
+                    connection.Close();//Added close because it was always open
+                }
+            }
+            catch (Exception ex)
+            {
+                return Content("An error occured: " + ex.Message);
+            }
+            return View();
+        }
+
+        public ActionResult get_topics()
+        {   //Get the post by topic
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
+                {
+                    if (connection.State != System.Data.ConnectionState.Open)
+                        connection.Open();
+                    MySqlCommand command = new MySqlCommand("SELECT * FROM contopic;", connection);
+                    MySqlDataReader dr = command.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+
+                    }
+                    dr.Close();
+                    connection.Close();//Added close because it was always open
+                }
+            }
+            catch (Exception ex)
+            {
+                return Content("An error occured: " + ex.Message);
+            }
+            return View();
+        }
+
+        public ActionResult get_public_posts()
+        {   //Get the public posts (CAN BE SEENS WITHOUT LOGGING IN)
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
+                {
+                    if (connection.State != System.Data.ConnectionState.Open)
+                        connection.Open();
+                    MySqlCommand command = new MySqlCommand("SELECT * FROM content WHERE ctype = 0;", connection);
+                    MySqlDataReader dr = command.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+
                     }
                     dr.Close();
                     connection.Close();//Added close because it was always open

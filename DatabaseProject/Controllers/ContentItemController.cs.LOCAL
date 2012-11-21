@@ -21,18 +21,9 @@ namespace DatabaseProject.Controllers
             //return Content("Hello, World!");
         }
 
-        // GET: /ContentItem/Details
-        public ActionResult Details()
-        {
-            return View();
-        }
-
+        //
         // GET: /ContentItem/GetPosts
         public ActionResult get_by_topic()
-
-        // GET: /ContentItem/Details/5
-
-        public ActionResult Write(/*int id*/)
         {
             string dummy = "";
             try
@@ -90,7 +81,7 @@ namespace DatabaseProject.Controllers
         //
         // GET: /ContentItem/Edit/5
 
-        public ActionResult Edit(/*int id*/)
+        public ActionResult Edit(int id)
         {
             return View();
         }
@@ -116,7 +107,7 @@ namespace DatabaseProject.Controllers
         //
         // GET: /ContentItem/Delete/5
 
-        public ActionResult Delete(/*int id*/)
+        public ActionResult Delete(int id)
         {
             return View();
         }

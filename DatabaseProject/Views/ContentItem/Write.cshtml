@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Write";
+    Layout = "~/Views/Shared/_ContentLayout.cshtml";
+}
+
+<form method="get" action="@*@Url.Action(insert query function dest. here)*@">
+    <textarea name="postItem" cols="100" rows="5">
+        Type post here...
+    </textarea>
+    <button class="btn" type="submit">Post!</button>
+</form>

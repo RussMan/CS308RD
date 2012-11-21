@@ -1,0 +1,48 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Content Home Page";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="hero-unit">
+            <h2>@ViewBag.Message</h2>
+            <p>This is will be one of the "extra features" we will implement. The titles of the
+            latest entered topics from people within the user's friends will be displayed here.</p>
+            <p><a href="http://asp.net/mvc" class="btn btn-primary btn-large" 
+              style="color: White;">To learn more about ASP.NET MVC visit &raquo;</a></p>
+        </div>
+    </section>
+}
+
+<div class="tabbable tabs-left pull-left">
+    <ul class="nav nav-tabs">
+        <li>
+            <a href="@Url.Action("Index", "ContentItem")" data-toggle="body">Read</a>
+        </li>
+        <li>
+            <a href="@Url.Action("Write","ContentItem")" data-toggle="body">Write</a>
+         </li>
+        <li>
+            <a href="@Url.Action("Edit","ContentItem")" data-toggle="body">Edit</a>
+        </li>
+        <li>
+            <a href="@Url.Action("Delete", "ContentItem")" data-toggle"body">Delete</a>
+        </li>
+    </ul>
+</div> @*--End tabbable*@
+<div class="body">
+        @RenderBody()
+        @*<div class="tab-pane" id="readContent">
+            @RenderBody()
+        </div>
+        <div class="tab-pane" id="writeContent">
+          
+        </div>
+        <div class="tab-pane" id="editContent">
+            
+        </div>
+        <div class="tab-pane" id="deleteContent">
+           
+        </div>*@
+    </div> @*--End body*@
