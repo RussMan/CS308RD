@@ -19,6 +19,12 @@ namespace DatabaseProject
                 defaults: new { controller = "ContentItem", action = "Index" }
             );
 
+            routes.MapRoute( // This is the route configuration to access the content section of the website
+                name: "QueryTest",
+                url: "Query/{PAGE}/{TOPIC}",
+                defaults: new { controller = "Query", action = "get_posts", PAGE = 0, TOPIC = ""}
+            );
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

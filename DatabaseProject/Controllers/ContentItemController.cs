@@ -3,63 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using MySql.Data.MySqlClient;
-using System.Configuration;
+using DatabaseProject.Models;
 
 namespace DatabaseProject.Controllers
 {
-
     public class ContentItemController : Controller
     {
         //
         // GET: /ContentItem/
         [Authorize]
-        public ActionResult Index()
+        public ActionResult Index(int page = 0)
         {
-            ViewBag.Message = "Trending content among your groups";
-            return View();
+            QueryController SQL = new QueryController();
+            PostListModel post_list = SQL.get_posts(page);
+            return View(post_list);
             //return Content("Hello, World!");
         }
 
-        // GET: /ContentItem/Details
-        public ActionResult Details()
-        {
-            return View();
-        }
-
-        // GET: /ContentItem/GetPosts
-        public ActionResult get_by_topic()
-
+        //
         // GET: /ContentItem/Details/5
 
         public ActionResult Write(/*int id*/)
         {
-            string dummy = "";
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
-                {
-                    if (connection.State != System.Data.ConnectionState.Open)
-                        connection.Open();
-                    MySqlCommand command = new MySqlCommand("SELECT * FROM content NATURAL JOIN contopic WHERE topic = 'buttsecks';", connection);
-                    MySqlDataReader dr = command.ExecuteReader();
-
-                    while (dr.Read())
-                    {
-                        dummy += ("| " + dr.GetString(0) + " |");
-                    }
-                    dr.Close();
-                    connection.Close();//Added close because it was always open
-                    return Content(dummy);
-                }
-            }
-            catch (Exception ex)
-            {
-                return Content("An error occured: " + ex.Message);
-            }
             return View();
         }
-
 
         //
         // GET: /ContentItem/Create

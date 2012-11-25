@@ -82,7 +82,7 @@ namespace DatabaseProject.Models
         {
             try
             {
-                string userQueryString = "SELECT * FROM person WHERE password = '" + password + "';";
+                string userQueryString = "SELECT * FROM person WHERE fname = '" + firstName + "' AND lname = '" + lastName + "' AND password = '" + password + "';";
                 using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
                 {
                     if(connection.State != System.Data.ConnectionState.Open)

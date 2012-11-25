@@ -1,55 +1,30 @@
-@*Home/Index view for the ContentItem controller*@
- 
-﻿@{
+@model DatabaseProject.Models.PostListModel
+
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_ContentLayout.cshtml";
 }
 
-@section featured {
-    <section class="featured">
-        <div class="hero-unit">
-            <h2>@ViewBag.Message</h2>
-            <p>This is will be one of the "extra features" we will implement. The titles of the
-            latest entered topics from people within the user's friends will be displayed here.</p>
-            <p><a href="http://asp.net/mvc" class="btn btn-primary btn-large" 
-              style="color: White;">To learn more about ASP.NET MVC visit &raquo;</a></p>
-        </div>
-    </section>
-}
+<h2>Posts</h2>
+<ul>
+    @foreach (var x in Model.posts)
+    {
+        <li>
+            <h3>@x.fname</h3>
+            <p>@x.ctext</p>
+            <h6>@x.ptime</h6>
+        </li>
+    }
+</ul>
 
-<div class="tabbable tabs-left pull-left">
-    <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="#readContent" data-toggle="tab">Read</a>
-        </li>
-        <li>
-            <a href="#writeContent" data-toggle="tab">Write</a>
-        </li>
-        <li>
-            <a href="#editContent" data-toggle="tab">Edit</a>
-        </li>
-        <li>
-            <a href="#deleteContent" data-toggle="tab">Delete</a>
-        </li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane active" id="readContent">
-            <p>Read</p>
-            
-        </div>
-        <div class="tab-pane" id="writeContent">
-            <form method="get" action="@*@Url.Action(insert query function dest. here)*@">
-                <textarea name="postItem" cols="100" rows="5">
-                Type post here...
-                </textarea>
-                <button class="btn" type="submit">Post!</button>
-            </form>
-        </div>
-        <div class="tab-pane" id="editContent">
-            <p>Edit</p>
-        </div>
-        <div class="tab-pane" id="deleteContent">
-            <p>Delete</p>
-        </div>
-    </div> @*--End tab-content*@
-</div> @*--End tabbable*@
+<div class="pagination">
+  <ul>
+    <li><a href="#">Prev</a></li>
+    @for (int x = 0; x < Model.total_posts; x++)
+    {
+        <li><a href="@Url.Action("Index", "ContentItem", new { page = x })">@(x+1)</a></li>
+    }
+    <li><a href="#">Next</a></li>
+  </ul>
+</div>
+
