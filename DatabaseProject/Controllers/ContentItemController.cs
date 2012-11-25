@@ -21,7 +21,7 @@ namespace DatabaseProject.Controllers
         //
         // GET: /ContentItem/Details/5
 
-        public ActionResult Details(int id)
+        public ActionResult Write(/*int id*/)
         {
             return View();
         }
@@ -55,7 +55,7 @@ namespace DatabaseProject.Controllers
         //
         // GET: /ContentItem/Edit/5
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(/*int id*/)
         {
             return View();
         }
@@ -81,7 +81,7 @@ namespace DatabaseProject.Controllers
         //
         // GET: /ContentItem/Delete/5
 
-        public ActionResult Delete(int id)
+        public ActionResult Delete(/*int id*/)
         {
             return View();
         }

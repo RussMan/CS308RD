@@ -309,13 +309,15 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ContentItem\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="Views\Shared\_ContentLayout.cshtml" />
+    <Content Include="Views\ContentItem\Index.cshtml" />
+    <Content Include="Views\ContentItem\Edit.cshtml" />
+    <Content Include="Views\ContentItem\Delete.cshtml" />
+    <Content Include="Views\ContentItem\Write.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
