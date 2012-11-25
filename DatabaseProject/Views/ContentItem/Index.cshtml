@@ -1,6 +1,30 @@
-﻿@{
+@model DatabaseProject.Models.PostListModel
+
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_ContentLayout.cshtml";
 }
 
-<h2>Hello, this is a test of the read section!</h2>
+<h2>Posts</h2>
+<ul>
+    @foreach (var x in Model.posts)
+    {
+        <li>
+            <h3>@x.fname</h3>
+            <p>@x.ctext</p>
+            <h6>@x.ptime</h6>
+        </li>
+    }
+</ul>
+
+<div class="pagination">
+  <ul>
+    <li><a href="#">Prev</a></li>
+    @for (int x = 0; x < Model.total_posts; x++)
+    {
+        <li><a href="@Url.Action("Index", "ContentItem", new { page = x })">@(x+1)</a></li>
+    }
+    <li><a href="#">Next</a></li>
+  </ul>
+</div>
+

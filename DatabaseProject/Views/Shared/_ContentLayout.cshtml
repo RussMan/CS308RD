@@ -18,7 +18,7 @@
 <div class="tabbable tabs-left pull-left">
     <ul class="nav nav-tabs">
         <li>
-            <a href="@Url.Action("Index", "ContentItem")" data-toggle="body">Read</a>
+            <a href="@Url.Action("Index", "ContentItem", new { page = 0})" data-toggle="body">Read</a>
         </li>
         <li>
             <a href="@Url.Action("Write","ContentItem")" data-toggle="body">Write</a>
@@ -31,7 +31,7 @@
         </li>
     </ul>
 </div> @*--End tabbable*@
-<div class="body">
+<div class="body pull-right">
         @RenderBody()
         @*<div class="tab-pane" id="readContent">
             @RenderBody()
