@@ -5,21 +5,24 @@
     Layout = "~/Views/Shared/_ContentLayout.cshtml";
 }
 
-<h2>Posts</h2>
-<ul>
-    @foreach (var x in Model.posts)
-    {
-        <li>
-            <h3>@x.fname</h3>
-            <p>@x.ctext</p>
-            <h6>@x.ptime</h6>
-        </li>
-    }
-</ul>
-
+<h2>You are user #@Session["userSessionID"]</h2> @*Check if the session variable works...*@
+<div class="row-fluid">
+    <ul class="unstyled"> @*Removes annoying bullet points next to each post*@
+        @foreach (var x in Model.posts)
+        {
+            <div class="span2">
+                <li>
+                    <h3>@x.fname</h3>
+                    <p>@x.ctext</p>
+                    <h6>@x.ptime</h6>
+                </li>
+            </div>
+        }
+    </ul>
+</div>@*--End row-fluid*@
 <div class="pagination">
   <ul>
-    <li><a href="#">Prev</a></li>
+    <li><a href="#">Prev</a></li> @*TODO: GET PREV/NEXT WORKING*@
     @for (int x = 0; x < Model.total_posts; x++)
     {
         <li><a href="@Url.Action("Index", "ContentItem", new { page = x })">@(x+1)</a></li>

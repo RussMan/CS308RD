@@ -15,34 +15,28 @@
     </section>
 }
 
-<div class="tabbable tabs-left pull-left">
-    <ul class="nav nav-tabs">
-        <li>
-            <a href="@Url.Action("Index", "ContentItem", new { page = 0})" data-toggle="body">Read</a>
-        </li>
-        <li>
-            <a href="@Url.Action("Write","ContentItem")" data-toggle="body">Write</a>
-         </li>
-        <li>
-            <a href="@Url.Action("Edit","ContentItem")" data-toggle="body">Edit</a>
-        </li>
-        <li>
-            <a href="@Url.Action("Delete", "ContentItem")" data-toggle"body">Delete</a>
-        </li>
-    </ul>
-</div> @*--End tabbable*@
-<div class="body pull-right">
-        @RenderBody()
-        @*<div class="tab-pane" id="readContent">
+<div class="row">
+    <div class="span2">
+        <div class="tabbable tabs-left pull-left">
+            <ul class="nav nav-tabs">
+                <li>
+                    <a href="@Url.Action("Index", "ContentItem", new { page = 0})" data-toggle="body">Read</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Write","ContentItem")" data-toggle="body">Write</a>
+                 </li>
+                <li>
+                    <a href="@Url.Action("Edit","ContentItem")" data-toggle="body">Edit</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Delete", "ContentItem")" data-toggle"body">Delete</a>
+                </li>
+            </ul>
+        </div> @*--End tabbable*@
+    </div>@*--End span2*@
+    <div class="span6">
+        <div class="body pull-left">
             @RenderBody()
-        </div>
-        <div class="tab-pane" id="writeContent">
-          
-        </div>
-        <div class="tab-pane" id="editContent">
-            
-        </div>
-        <div class="tab-pane" id="deleteContent">
-           
-        </div>*@
-    </div> @*--End body*@
+        </div> @*--End body*@
+    </div>@*--End span6*@
+</div>@*--End row*@
