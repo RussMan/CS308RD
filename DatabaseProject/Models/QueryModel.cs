@@ -32,16 +32,17 @@ namespace DatabaseProject.Models
     public class NewPostModel
     {
         [Required]
+        [Display(Name = "Body")]
         public string ctext { get; set; }
-        
-        [Required]
-        public int pid { get; set; }    //Needed from the session variable
 
         [Required]
-        [Display(Name = "Make Private?")]   //Option to public/private
-        public int ctype;
+        [Display(Name = "Members Only?")]   //Option to public/private
+        public bool ctype { get; set; }
 
-        public string ptime { get; set; }
-        public List<string> topic { get; set; } //Optional topic
+        [Required]
+        public int pid { get; set; }
+
+        [Display(Name = "Topic")]
+        public string topic { get; set; }   //Optional topic
     }
 }

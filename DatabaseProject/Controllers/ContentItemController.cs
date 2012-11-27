@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DatabaseProject.Models;
+using MySql.Data.MySqlClient;
+using System.Configuration;
 
 namespace DatabaseProject.Controllers
 {
@@ -17,14 +19,21 @@ namespace DatabaseProject.Controllers
             QueryController SQL = new QueryController();
             PostListModel post_list = SQL.get_posts(page);
             return View(post_list);
-            //return Content("Hello, World!");
         }
 
         //
         // GET: /ContentItem/Details/5
-
-        public ActionResult Write(/*int id*/)
+        public ActionResult Write()
         {
+            return View();
+        }
+        
+        [HttpPost]
+        public ActionResult Write(NewPostModel new_post)
+        {
+            QueryController SQL = new QueryController();
+            new_post.pid = (int)HttpContext.Session["userSessionID"];
+            SQL.new_post(new_post);
             return View();
         }
 
