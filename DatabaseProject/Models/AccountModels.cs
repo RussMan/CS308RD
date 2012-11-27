@@ -10,6 +10,7 @@ using Microsoft.SqlServer.Server;
 using MySql.Data.MySqlClient;
 using System.Configuration;
 using System.Web;
+using System.Security.Cryptography;
 
 namespace DatabaseProject.Models
 {
