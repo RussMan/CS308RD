@@ -134,7 +134,7 @@ namespace DatabaseProject.Controllers
                         }
 
                     command = new MySqlCommand("SELECT COUNT(cid) FROM content;", connection);
-                    total = (Convert.ToInt32(command.ExecuteScalar())) / 5;
+                    total = ((Convert.ToInt32(command.ExecuteScalar())) / 5) + 1;
                     connection.Close(); //Added close because it was always open
                 }
 
