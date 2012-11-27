@@ -12,6 +12,8 @@ using DatabaseProject.Filters;
 using DatabaseProject.Models;
 using MySql.Data.MySqlClient;
 using System.Configuration;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace DatabaseProject.Controllers
 {
@@ -39,6 +41,7 @@ namespace DatabaseProject.Controllers
         {
             if (ModelState.IsValid /*&& WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe)*/)
             {
+               
                 if(model.isValid(model.FirstName, model.LastName, model.Password))
                 {
                     FormsAuthentication.SetAuthCookie(model.LastName, model.RememberMe);
@@ -91,8 +94,12 @@ namespace DatabaseProject.Controllers
                     {
                         if (connection.State != System.Data.ConnectionState.Open)
                             connection.Open();
+                        byte[] passwordInBytes = System.Text.Encoding.ASCII.GetBytes(model.Password); //Convert password to byte array
+                        MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider(); //Initialize md5 algorithm
+                        passwordInBytes = md5.ComputeHash(passwordInBytes); //Compute hash value
+                        String encodedPassword = BitConverter.ToString(passwordInBytes).Replace("-",""); //NOTE: Formats hash value as a string of characters without dashes b/c initially came with dashes
                         MySqlCommand command = new MySqlCommand("INSERT INTO person (password, fname, lname)" +
-                                                                "VALUES ('" + model.Password + "', '" + model.FirstName + "', '" + model.LastName + "');", connection);
+                                                                "VALUES ('" + encodedPassword + "', '" + model.FirstName + "', '" + model.LastName + "');", connection);
                         command.ExecuteNonQuery(); //Only for GET BY ID, DELETE, UPDATE, and INSERT statements -> returning a single row/tuple
                         connection.Close();//Added close because it was always open
                     }

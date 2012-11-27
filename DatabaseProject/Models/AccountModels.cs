@@ -9,6 +9,8 @@ using System.Web.Security;
 using Microsoft.SqlServer.Server;
 using MySql.Data.MySqlClient;
 using System.Configuration;
+using System.Web;
+using System.Security.Cryptography;
 
 namespace DatabaseProject.Models
 {
@@ -90,7 +92,13 @@ namespace DatabaseProject.Models
                     using (MySqlCommand command = new MySqlCommand(userQueryString, connection))
                     using (MySqlDataReader dr = command.ExecuteReader())//For returning a set of records, may need to implement a check to retrieve one specific user
                     {
-                        if (dr.Read()) return true; 
+                        if (dr.Read())
+                        {
+                            //Gets the user's PID from the database to use as the session variable
+                            HttpContext context = HttpContext.Current;
+                            context.Session["userSessionID"] = dr.GetInt32("PID");
+                            return true;
+                        }
                         else return false;
                     }
                 }
