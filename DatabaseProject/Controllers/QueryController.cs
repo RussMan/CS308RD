@@ -156,11 +156,20 @@ namespace DatabaseProject.Controllers
          *                                POSTING RELATED ACTIONS                                *
          *****************************************************************************************/
         [HttpPost]
-        public ActionResult new_post(NewPostModel new_post)
+        public void new_post(NewPostModel new_post)
         {   //Create a new post using data from the page and add the new post 
             int cid = 0;
-            string SQL_Query = "INSERT INTO content(ctype, ctext, poster, ptime) VALUES("
-                               + new_post.ctype + "," + new_post.ctext + "," + new_post.pid + "," + new_post.ptime + ");";
+            
+            DateTime time = DateTime.Now;
+            string time_s = string.Format("{0:D4}-{1:D2}-{2:D2} {3:D2}:{4:D2}:{5:D2}", time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second);
+
+            string SQL_Query = "INSERT INTO content(ctype, ctext, poster, ptime) VALUES( ";
+            if (new_post.ctype)
+                SQL_Query += "1, '";
+            else
+                SQL_Query += "0, '";
+            SQL_Query += new_post.ctext + "', " + new_post.pid + ", '" + time_s + "');";
+            
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
@@ -170,7 +179,7 @@ namespace DatabaseProject.Controllers
                     MySqlCommand command = new MySqlCommand(SQL_Query, connection);
                     command.ExecuteNonQuery();
 
-                    if (new_post.topic.Count > 0)   //We have a topic to add
+                    if (new_post.topic != null)   //We have a topic to add
                     {//First get the latest post we added to get the CID
                         SQL_Query = "SELECT MAX(cid) FROM contopic;";
                         command = new MySqlCommand(SQL_Query, connection);
@@ -189,10 +198,8 @@ namespace DatabaseProject.Controllers
             }
             catch (Exception ex)
             {
-                return Content("An error occured: " + ex.Message);
+                
             }
-            
-            return View();
         }
     }
 }
