@@ -36,10 +36,10 @@
                                                     @*@Html.ActionLink("Home", "Index", "Home")*@
                                                 </li>
                                                 <li class="divider-vertical"></li>
-                                                <li class="@(ViewBag.Active == "About" ? "active" : "")">
-                                                    <a href="@Url.Action("About","Home")">
+                                                <li class="@(ViewBag.Active == "Public Posts" ? "active" : "")">
+                                                    <a href="@Url.Action("PublicPosts","Home")">
                                                         <i class="icon-question-sign icon-white"></i>
-                                                        About
+                                                        Public Posts
                                                     </a>
                                                     @*@Html.ActionLink("About", "About", "Home")*@
                                                 </li>
@@ -84,7 +84,7 @@
         <footer>
             <div class="row">
                 <div class="span4"> @*Adjust the span according to how long the text below will be*@
-                    <p>&copy; @DateTime.Now.Year - Polytechnic Institute of NYU Introduction to Databases</p>
+                    <p>&copy; @DateTime.Now.Year - Polytechnic Institute of NYU - Introduction to Databases</p>
                 </div>
             </div>
         </footer>

@@ -3,29 +3,34 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_ContentLayout.cshtml";
+    int accordionNumber = 0;
 }
 
 <h2>You are user #@Session["userSessionID"]</h2> @*Check if the session variable works...*@
-<div class="row-fluid">
-    <ul class="unstyled"> @*Removes annoying bullet points next to each post*@
-        @foreach (var x in Model.posts)
-        {
-            <div class="span2">
-                <li>
-                    <h3>@x.fname</h3>
-                    <p>@x.ctext</p>
-                    <h6>@x.ptime</h6>
-                </li>
+<div class="accordion" id="mainaccordion">
+    @foreach (var x in Model.posts)
+    {
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                 <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#mainaccordion" href="#@accordionNumber">
+                    Post #@x.cid by @x.fname at @x.ptime
+                 </a>
             </div>
-        }
-    </ul>
-</div>@*--End row-fluid*@
+            <div id="@accordionNumber" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    @x.ctext
+                </div>
+            </div>
+        </div>
+        accordionNumber++;        
+    }
+</div>
 <div class="pagination">
   <ul>
     <li><a href="#">Prev</a></li> @*TODO: GET PREV/NEXT WORKING*@
     @for (int x = 0; x < Model.total_posts; x++)
     {
-        <li><a href="@Url.Action("Index", "ContentItem", new { page = x })">@(x+1)</a></li>
+        <li><a href="@Url.Action("Index", "ContentItem", new { page = x })">@(x + 1)</a></li>
     }
     <li><a href="#">Next</a></li>
   </ul>

@@ -1,5 +1,7 @@
-﻿@{
-    ViewBag.Title = "About";
+﻿@model DatabaseProject.Models.PostListModel
+
+@{
+    ViewBag.Title = "Public Posts";
 }
 
 @section featured { @*JUST TESTING OUT THE @SECTION AND HOW IT WORKS*@
@@ -14,7 +16,30 @@
     </section>
 }
 
-<hgroup class="title">
+<div id="myCarousel" class="carousel slide">
+  <!-- Carousel items -->
+  <div class="carousel-inner">
+    @foreach (var x in Model.posts)
+    {
+        <div class="item">
+            <div class"row">
+                <div class="span1 offset2">
+                    <h3>@x.fname</h3>
+                </div>
+                <div class="span2">
+                    <h6>@x.ptime</h6>
+                </div>
+            </div>
+            <p>@x.ctext</p>
+        </div>    
+    }
+  </div>
+  <!-- Carousel nav -->
+  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+</div>
+        
+@*<hgroup class="title">
     <h1>@ViewBag.Title.</h1>
     <h2>@ViewBag.Message</h2>
 </hgroup>
@@ -67,4 +92,4 @@
         <li>@Html.ActionLink("About", "About", "Home")</li>
         <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
     </ul>
-</aside>
+</aside>*@
