@@ -41,8 +41,12 @@ namespace DatabaseProject.Controllers
         {
             if (ModelState.IsValid /*&& WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe)*/)
             {
-               
-                if(model.isValid(model.FirstName, model.LastName, model.Password))
+
+                byte[] passwordInBytes = System.Text.Encoding.ASCII.GetBytes(model.Password); //Convert password to byte array
+                MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider(); //Initialize md5 algorithm
+                passwordInBytes = md5.ComputeHash(passwordInBytes); //Compute hash value
+                string encodedPassword = BitConverter.ToString(passwordInBytes).Replace("-", ""); //NOTE: Formats hash value as a string of characters without dashes b/c initially came with dashes
+                if(model.isValid(model.FirstName, model.LastName, encodedPassword))
                 {
                     FormsAuthentication.SetAuthCookie(model.LastName, model.RememberMe);
                     return RedirectToLocal(returnUrl);
@@ -97,7 +101,7 @@ namespace DatabaseProject.Controllers
                         byte[] passwordInBytes = System.Text.Encoding.ASCII.GetBytes(model.Password); //Convert password to byte array
                         MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider(); //Initialize md5 algorithm
                         passwordInBytes = md5.ComputeHash(passwordInBytes); //Compute hash value
-                        String encodedPassword = BitConverter.ToString(passwordInBytes).Replace("-",""); //NOTE: Formats hash value as a string of characters without dashes b/c initially came with dashes
+                        string encodedPassword = BitConverter.ToString(passwordInBytes).Replace("-",""); //NOTE: Formats hash value as a string of characters without dashes b/c initially came with dashes
                         MySqlCommand command = new MySqlCommand("INSERT INTO person (password, fname, lname)" +
                                                                 "VALUES ('" + encodedPassword + "', '" + model.FirstName + "', '" + model.LastName + "');", connection);
                         command.ExecuteNonQuery(); //Only for GET BY ID, DELETE, UPDATE, and INSERT statements -> returning a single row/tuple
