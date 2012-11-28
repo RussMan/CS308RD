@@ -1,11 +1,38 @@
-﻿@{
+﻿@model DatabaseProject.Models.NewPostModel
+
+@{
     ViewBag.Title = "Write";
     Layout = "~/Views/Shared/_ContentLayout.cshtml";
 }
 
-<form method="get" action="@*@Url.Action(insert query function dest. here)*@">
-    <textarea name="postItem" cols="100" rows="5">
-        Type post here...
-    </textarea>
+<h2>New Post</h2>
+@using (Html.BeginForm())
+{   
+    <fieldset>
+    <ol>
+        <li>
+            @Html.LabelFor(m => m.ctext)
+            @Html.TextAreaFor(m => m.ctext)
+        </li>
+        <li>
+            @Html.LabelFor(m => m.topic)
+            @Html.TextBoxFor(m => m.topic)
+        </li>
+        <li>
+            @Html.CheckBoxFor(m => m.ctype)
+            @Html.LabelFor(m => m.ctype, new { @class = "checkbox" })
+        </li>
+    </ol>
+    <button class="btn btn-primary btn-medium" type="submit">Submit</button>
+    </fieldset>
+}
+
+
+@*
+<form method="get" action="@Url.Action("Write", "ContentItem")">
+    <textarea name="ctext" required="required" cols="100" rows="5"></textarea>
+    <input type="text" name="topic"><br></input>
+    <input type="checkbox" name="ctype" value="ctype"> Members Only?<br></input>
     <button class="btn" type="submit">Post!</button>
-</form>
+</form> 
+*@
