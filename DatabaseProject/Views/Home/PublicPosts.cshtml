@@ -27,8 +27,8 @@
                     <p>Here is where you can view public posts even if you are not logged in.
                        While you're at it, please take a moment to rate any posts too!
                     </p>
-                    <p><a href="http://asp.net/mvc" class="btn btn-primary btn-large" 
-                        style="color: White;">To learn more about ASP.NET MVC visit &raquo;</a></p>
+                    <p><a href="@Url.Action("Login", "Account")" class="btn btn-primary btn-large" 
+                        style="color: White;">Log in to see more posts! &raquo;</a></p>
                 </div>
             </div>
         </div>
@@ -42,8 +42,27 @@
                         <h2>Post #@x.cid</h2>
                         <h3>@x.fname at @x.ptime</h3>
                         <p>@x.ctext</p>
-                        <p><a href="http://asp.net/mvc" class="btn btn-primary btn-large" 
-                            style="color: White;">To learn more about ASP.NET MVC visit &raquo;</a></p>
+                        <label class="radio inline">
+                          <input type="radio" name="inlineRadio" value="-2">
+                          <i class="icon-star"></i>
+                          <i class="icon-star"></i>
+                        </label>
+                        <label class="radio inline">
+                          <input type="radio" name="inlineRadio" value="-1">
+                          <i class="icon-star"></i>
+                        </label>
+                        <label class="radio inline">
+                          <input type="radio" name="inlineRadio" value="0"> 0
+                        </label>
+                        <label class="radio inline">
+                          <input type="radio" name="inlineRadio" value="1"> 
+                          <i class="icon-star-empty"></i>
+                        </label>
+                        <label class="radio inline">
+                          <input type="radio" name="inlineRadio" value="2">
+                          <i class="icon-star-empty"></i>
+                          <i class="icon-star-empty"></i>
+                        </label>
                     </div>
                 </div>
             </div>
