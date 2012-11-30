@@ -68,7 +68,7 @@ namespace DatabaseProject.Controllers
             return View(viewModel); //Return the topics via a Topic Model
         }
 
-        public PostListModel get_posts(int PAGE, string TOPIC = "", int ctype = 0)
+        public PostListModel get_posts(int PAGE, string TOPIC = "", int ctype = 0, bool all = false)
         {   //Get the post based on supplied data (like page, topic, and if everyone/only logged in people can see it)
             int total = -1;
             List<PostModel> fetched_Posts = new List<PostModel>();
@@ -79,7 +79,11 @@ namespace DatabaseProject.Controllers
                 SQL_Query += (" NATURAL JOIN contopic WHERE topic = '" + TOPIC + "' AND ctype = " + ctype);
             else
                 SQL_Query += (" WHERE ctype = " + ctype);
-            SQL_Query += (" LIMIT 5 OFFSET " + (PAGE * 5) + ";");
+
+            if (!all)
+                SQL_Query += (" LIMIT 5 OFFSET " + (PAGE * 5) + ";");
+            else
+                SQL_Query += ";";
 
             try
             {
@@ -134,7 +138,7 @@ namespace DatabaseProject.Controllers
                         }
 
                     command = new MySqlCommand("SELECT COUNT(cid) FROM content;", connection);
-                    total = ((Convert.ToInt32(command.ExecuteScalar())) / 5) + 1;
+                    total = ((Convert.ToInt32(command.ExecuteScalar())) / 5);
                     connection.Close(); //Added close because it was always open
                 }
 

@@ -20,7 +20,7 @@ namespace DatabaseProject.Controllers
         {
             //ViewBag.Message = "Your app description page. Here is the featured section of the About page!";
             QueryController SQL = new QueryController();
-            PostListModel post_list = SQL.get_posts(page);
+            PostListModel post_list = SQL.get_posts(page, "", 0, true); //All posts
             return View(post_list);
         }
 
