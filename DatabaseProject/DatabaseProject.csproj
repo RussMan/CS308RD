@@ -318,7 +318,7 @@
     <Content Include="Views\Shared\_ContentLayout.cshtml" />
     <Content Include="Views\ContentItem\Index.cshtml" />
     <Content Include="Views\ContentItem\Edit.cshtml" />
-    <Content Include="Views\ContentItem\Delete.cshtml" />
+    <Content Include="Views\ContentItem\Search.cshtml" />
     <Content Include="Views\ContentItem\Write.cshtml" />
   </ItemGroup>
   <PropertyGroup>
