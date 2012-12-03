@@ -97,6 +97,7 @@ namespace DatabaseProject.Models
                             //Gets the user's PID from the database to use as the session variable
                             HttpContext context = HttpContext.Current;
                             context.Session["userSessionID"] = dr.GetInt32("PID");
+                            context.Session["userName"] = dr.GetString("fname");
                             return true;
                         }
                         else return false;

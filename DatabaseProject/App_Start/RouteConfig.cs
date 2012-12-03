@@ -15,8 +15,8 @@ namespace DatabaseProject
 
             routes.MapRoute( // This is the route configuration to access the content section of the website
                 name: "ContentItem",
-                url: "ContentItem/{action}",
-                defaults: new { controller = "ContentItem", action = "Index" }
+                url: "ContentItem/{action}/{id}",
+                defaults: new { controller = "ContentItem", action = "Index", id = UrlParameter.Optional}
             );
 
             routes.MapRoute( // This is the route configuration to access the content section of the website

@@ -1,0 +1,18 @@
+﻿@model DatabaseProject.Models.SearchModel
+
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_ContentLayout.cshtml";
+}
+
+<h3>Enter in a topic to find all related posts</h3>
+@using(Html.BeginForm())
+{
+    <fiedset>
+        <div class="input-append">
+            @Html.TextBoxFor(m => m.searchTopic)
+            <button class="btn" type="submit"><i class="icon-search"></i></button>
+        </div>
+    </fiedset>
+}
+<h4><i>Note: Type "all" to see all available posts for your user</i></h4>

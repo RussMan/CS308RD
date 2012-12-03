@@ -11,61 +11,62 @@ namespace DatabaseProject.Controllers
 {
     public class ContentItemController : Controller
     {
+
         //
         // GET: /ContentItem/
         [Authorize]
         public ActionResult Index(int page = 0)
         {
-            QueryController SQL = new QueryController();
-            PostListModel post_list = SQL.get_posts(page);
+            Session["currentPage"] = page;
+            PostListModel post_list = new PostListModel();
+            if (Session["searchedPosts"] != null)
+            {
+                //IncludeSearchedPosts(ref post_list, page);
+                post_list = (PostListModel)Session["searchedPosts"];
+            }
+            else
+            {
+                QueryController queryCommand = new QueryController();
+                post_list = queryCommand.get_posts(page);
+                if (Session["totalPages"] == null)
+                {
+                    Session["totalPages"] = post_list.total_posts / 5; // Get the number of pages needed for pagination in the Content/Read page
+                }
+            }
+            return View(post_list);
+        }
+        
+        //
+        // POST: /ContentItem/
+        [HttpPost]
+        public ActionResult Index(int id, PostListModel postList) // This is for user input on the rating, NOT on page changing
+        {                                                         // If page parameter, URL may not know which to go to and throw an error
+            QueryController queryCommand = new QueryController();
+            queryCommand.rate_post((int)HttpContext.Session["userSessionID"], id, postList.rating.rate); // id is in reference to the CID (post ID)
+            PostListModel post_list = queryCommand.get_posts();
             return View(post_list);
         }
 
         //
-        // GET: /ContentItem/Details/5
+        // GET: /ContentItem/Write
         public ActionResult Write()
         {
             return View();
         }
         
+        //
+        // POST: /ContentItem/Write
         [HttpPost]
         public ActionResult Write(NewPostModel new_post)
         {
-            QueryController SQL = new QueryController();
-            new_post.pid = (int)HttpContext.Session["userSessionID"];
-            SQL.new_post(new_post);
+            QueryController queryCommand = new QueryController();
+            new_post.pid = (int)HttpContext.Session["userSessionID"]; 
+            queryCommand.new_post(new_post);
             return View();
         }
 
         //
-        // GET: /ContentItem/Create
-
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        //
-        // POST: /ContentItem/Create
-
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        //
-        // GET: /ContentItem/Edit/5
-
+        // GET: /ContentItem/Edit/
         public ActionResult Edit(/*int id*/)
         {
             return View();
@@ -73,7 +74,6 @@ namespace DatabaseProject.Controllers
 
         //
         // POST: /ContentItem/Edit/5
-
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
@@ -90,23 +90,33 @@ namespace DatabaseProject.Controllers
         }
 
         //
-        // GET: /ContentItem/Delete/5
-
-        public ActionResult Delete(/*int id*/)
+        // GET: /ContentItem/Search
+        public ActionResult Search()
         {
             return View();
         }
 
         //
-        // POST: /ContentItem/Delete/5
-
+        // POST: /ContentItem/Search/topic
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Search(SearchModel topic)
         {
             try
             {
-                // TODO: Add delete logic here
+                if (topic.searchTopic == null) // User doesn't provide any text input
+                {
+                    return View();
+                }
 
+                if (topic.searchTopic != "all") // "all" will reset to default post types
+                {
+                    QueryController queryCommand = new QueryController();
+                    PostListModel post_list = queryCommand.get_posts(0, topic.searchTopic);
+                    Session["searchedPosts"] = post_list;
+                    return RedirectToAction("Index");
+                }
+
+                Session["searchedPosts"] = null; // if "all": clear for future searches
                 return RedirectToAction("Index");
             }
             catch
@@ -114,5 +124,30 @@ namespace DatabaseProject.Controllers
                 return View();
             }
         }
+
+        //public void IncludeSearchedPosts(ref PostListModel post_list, int page = 0)
+        //{
+        //    PostListModel searchedPosts = (PostListModel)Session["searchedPosts"]; // Type cast to get posts from Global object "Session"
+        //    post_list.total_posts += searchedPosts.total_posts;
+        //    post_list.posts = searchedPosts.posts;
+        //    post_list.cid_list = searchedPosts.cid_list;
+        //    Session["searchedPosts"] = null; // Allow for new search posts to be stored
+        //    QueryController queryCommand = new QueryController();
+        //    PostListModel regularPosts = queryCommand.get_posts(page);
+        //    PostEqualityComparer postComparator = new PostEqualityComparer();
+        //    CIDEqualityComparer CIDComparator = new CIDEqualityComparer();
+        //    foreach (var x in regularPosts.posts) // N^2 running time, but acceptable due to max of 5 posts within the list anyway...
+        //    {
+        //        if(!post_list.posts.Contains(x,postComparator)) // Prevent duplicates
+        //        {
+        //            post_list.posts.Add(x);
+        //            post_list.total_posts++;
+        //        }
+        //    }
+        //    foreach (var x in regularPosts.cid_list) // N^2 running time, but acceptable due to max of 5 posts within the list anyway...
+        //    {
+        //        if(!post_list.cid_list.Contains(x, CIDComparator)) post_list.cid_list.Add(x); // Prevent duplicates
+        //    }
+        //}
     }
 }

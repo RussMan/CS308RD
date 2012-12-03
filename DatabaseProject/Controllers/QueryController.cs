@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using MySql.Data.MySqlClient;
 using System.Configuration;
 using DatabaseProject.Models;
+using System.Security.Cryptography;
 
 namespace DatabaseProject.Controllers
 {
@@ -23,7 +24,7 @@ namespace DatabaseProject.Controllers
                     if (connection.State != System.Data.ConnectionState.Open)
                         connection.Open();
                     MySqlCommand command = new MySqlCommand("REPLACE INTO rate SET pid = " + SESSION_PID + ", cid = " + RATED_CID +
-                                                            ", rtg = " + RATING + "');", connection);
+                                                            ", rtg = " + RATING + ";", connection);
                     command.ExecuteNonQuery();
                     connection.Close();
                 }
@@ -68,10 +69,15 @@ namespace DatabaseProject.Controllers
             return View(viewModel); //Return the topics via a Topic Model
         }
 
+<<<<<<< HEAD
         public PostListModel get_posts(int PAGE, string TOPIC = "", int ctype = 0, bool all = false)
+=======
+        public PostListModel get_posts(int PAGE = 0, string TOPIC = "", int ctype = 0)
+>>>>>>> 10d3c5252d71672bd28c5b4d7eb321f2c74504ad
         {   //Get the post based on supplied data (like page, topic, and if everyone/only logged in people can see it)
             int total = -1;
             List<PostModel> fetched_Posts = new List<PostModel>();
+            List<int> post_cid_list = new List<int>();
 
             //The following makes a custom query that changes depending on the data available
             string SQL_Query = "SELECT * FROM content";
@@ -106,6 +112,7 @@ namespace DatabaseProject.Controllers
                             ptime = dr.GetString("ptime"),
                             post_Topics = new List<string>()
                         });
+                        post_cid_list.Add(dr.GetInt32("cid"));
                     }
                     dr.Close();
 
@@ -138,7 +145,11 @@ namespace DatabaseProject.Controllers
                         }
 
                     command = new MySqlCommand("SELECT COUNT(cid) FROM content;", connection);
+<<<<<<< HEAD
                     total = ((Convert.ToInt32(command.ExecuteScalar())) / 5);
+=======
+                    total = (Convert.ToInt32(command.ExecuteScalar()));
+>>>>>>> 10d3c5252d71672bd28c5b4d7eb321f2c74504ad
                     connection.Close(); //Added close because it was always open
                 }
 
@@ -151,11 +162,13 @@ namespace DatabaseProject.Controllers
             PostListModel post_list = new PostListModel
             {
                 posts = fetched_Posts,
-                total_posts = total
+                total_posts = total,
+                cid_list = post_cid_list
             };
 
             return post_list;
         }
+
         /*****************************************************************************************
          *                                POSTING RELATED ACTIONS                                *
          *****************************************************************************************/

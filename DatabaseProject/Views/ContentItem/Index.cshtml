@@ -5,8 +5,28 @@
     Layout = "~/Views/Shared/_ContentLayout.cshtml";
     int accordionNumber = 0;
 }
+@using System.Web.Mvc;
+@using System.Text;
+@functions 
+{
+    public int DeterminePreviousPage()
+    {
+        if((int)Session["currentPage"] == 0)
+        {
+            return  0;
+        }
+        else return (int)Session["currentPage"] - 1;
+    }
+    
+    public int DetermineNextPage()
+    {
+        if((int)Session["currentPage"] == (int)Session["totalPages"] - 1) return (int)Session["currentPage"];
+        else return (int)Session["currentPage"] + 1;
+    }
+}
 
-<h2>You are user #@Session["userSessionID"]</h2> @*Check if the session variable works...*@
+<h2>Welcome, @Session["userName"]! You are user #@Session["userSessionID"]</h2>
+<h5>Below are posts available for to read and rate</h5>
 <div class="accordion" id="mainaccordion">
     @foreach (var x in Model.posts)
     {
@@ -19,41 +39,56 @@
             <div id="@accordionNumber" class="accordion-body collapse">
                 <div class="accordion-inner">
                     @x.ctext <br />
-                    <label class="radio inline">
-                        <input type="radio" name="inlineRadio" value="-2">
-                        <i class="icon-star"></i>
-                        <i class="icon-star"></i>
-                    </label>
-                    <label class="radio inline">
-                        <input type="radio" name="inlineRadio" value="-1">
-                        <i class="icon-star"></i>
-                    </label>
-                    <label class="radio inline">
-                        <input type="radio" name="inlineRadio" value="0"> 0
-                    </label>
-                    <label class="radio inline">
-                        <input type="radio" name="inlineRadio" value="1"> 
-                        <i class="icon-star-empty"></i>
-                    </label>
-                    <label class="radio inline">
-                        <input type="radio" name="inlineRadio" value="2">
-                        <i class="icon-star-empty"></i>
-                        <i class="icon-star-empty"></i>
-                    </label>
                 </div>
-            </div>
-        </div>
-        accordionNumber++;        
+                @using (Html.BeginForm("Index", "ContentItem", new { id = x.cid}))
+                {
+                    <div>
+                        <span class="label">
+                            <i class="icon-thumbs-up"></i>
+                            <i class="icon-thumbs-up"></i>
+                        <span>
+                        @Html.RadioButtonFor(post => post.rating.rate, 2)
+                    </div>
+                    <div>
+                        <span class="label">
+                            <i class="icon-thumbs-up"></i>
+                        <span>
+                        @Html.RadioButtonFor(post => post.rating.rate, 1)
+                    </div>
+                    <div>
+                        <span class="label">
+                            0
+                        <span>
+                        @Html.RadioButtonFor(post => post.rating.rate, 0)
+                    </div>
+                    <div>
+                        <span class="label">
+                            <i class="icon-thumbs-down"></i>
+                        <span>
+                        @Html.RadioButtonFor(post => post.rating.rate, -1)
+                    </div>
+                    <div>
+                        <span class="label">
+                            <i class="icon-thumbs-down"></i>
+                            <i class="icon-thumbs-down"></i>
+                        <span>
+                        @Html.RadioButtonFor(post => post.rating.rate, -2)
+                    </div>
+                    <button class="btn btn-small" type="submit">Rate!</button>
+                }
+                <p><i>Average rating for this post is @x.avg_rtg</i></p>
+            </div> @*--End accordion body*@
+        </div>@*--End accordion group*@
+        accordionNumber++;
     }
 </div>
 <div class="pagination">
   <ul>
-    <li><a href="#">Prev</a></li> @*TODO: GET PREV/NEXT WORKING*@
-    @for (int x = 0; x < Model.total_posts; x++)
-    {
-        <li><a href="@Url.Action("Index", "ContentItem", new { page = x })">@(x + 1)</a></li>
+    <li><a href="@Url.Action("Index", "ContentItem", new { page = DeterminePreviousPage()})">Prev</a></li>
+    @for (int x = 0; x < (int)Session["totalPages"]; ++x)
+    {   
+        <li><a href="@Url.Action("Index", "ContentItem", new { page = x })">@(x+1)</a></li>
     }
-    <li><a href="#">Next</a></li>
+    <li><a href="@Url.Action("Index", "ContentItem", new { page = DetermineNextPage()})">Next</a></li>
   </ul>
 </div>
-

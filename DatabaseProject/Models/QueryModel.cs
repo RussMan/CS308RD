@@ -23,13 +23,22 @@ namespace DatabaseProject.Models
         public List<string> post_Topics { get; set; }
     }
 
+    public class RateModel
+    {
+        public int rate { get; set; }
+    }
     public class PostListModel
     {
         public List<PostModel> posts { get; set; }
         public int total_posts { get; set; }
+<<<<<<< HEAD
         //Variables for Rating
         public int rating { get; set; }
         public int cid { get; set; }
+=======
+        public List<int> cid_list { get; set; }
+        public RateModel rating { get; set; }
+>>>>>>> 10d3c5252d71672bd28c5b4d7eb321f2c74504ad
     }
 
     public class NewPostModel
@@ -48,4 +57,38 @@ namespace DatabaseProject.Models
         [Display(Name = "Topic")]
         public string topic { get; set; }   //Optional topic
     }
+
+    public class SearchModel // Used for getting search entry from user to perform post look up by topic
+    {
+        public string searchTopic { get; set; }
+    }
+
+    //class PostEqualityComparer : IEqualityComparer<PostModel> // For comparing posts to prevent duplicates
+    //{
+    //    public bool Equals(PostModel x, PostModel y)
+    //    {
+    //        if (x.cid == y.cid) return true;
+    //        else return false;
+    //    }
+
+    //    public int GetHashCode(PostModel post)
+    //    {
+    //        int hashCode = post.cid ^ post.pid;
+    //        return hashCode.GetHashCode();
+    //    }
+    //}
+
+    //class CIDEqualityComparer : IEqualityComparer<int> // For comparing CIDs in the CID List [prevents some enumeration exception]
+    //{
+    //    public bool Equals(int x, int y)
+    //    {
+    //        if (x == y) return true;
+    //        else return false;
+    //    }
+
+    //    public int GetHashCode(int x)
+    //    {
+    //        return x.GetHashCode();
+    //    }
+    //}
 }
