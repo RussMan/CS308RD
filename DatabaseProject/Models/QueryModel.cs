@@ -27,6 +27,9 @@ namespace DatabaseProject.Models
     {
         public List<PostModel> posts { get; set; }
         public int total_posts { get; set; }
+        //Variables for Rating
+        public int rating { get; set; }
+        public int cid { get; set; }
     }
 
     public class NewPostModel
