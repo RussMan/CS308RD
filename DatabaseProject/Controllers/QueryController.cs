@@ -69,7 +69,7 @@ namespace DatabaseProject.Controllers
             return View(viewModel); //Return the topics via a Topic Model
         }
 
-        public PostListModel get_posts(int PAGE = 0, string TOPIC = "", int ctype = 0)
+        public PostListModel get_posts(bool all = true, int ctype = 0, int PAGE = 0, string TOPIC = "")
         {   //Get the post based on supplied data (like page, topic, and if everyone/only logged in people can see it)
             int total = -1;
             List<PostModel> fetched_Posts = new List<PostModel>();
@@ -77,11 +77,27 @@ namespace DatabaseProject.Controllers
 
             //The following makes a custom query that changes depending on the data available
             string SQL_Query = "SELECT * FROM content";
+
             if (TOPIC != "")
-                SQL_Query += (" NATURAL JOIN contopic WHERE topic = '" + TOPIC + "' AND ctype = " + ctype);
+            {
+                SQL_Query += (" NATURAL JOIN contopic WHERE topic = '" + TOPIC + "'");
+                if (ctype == 0)
+                    SQL_Query += (" AND ctype = 0");
+                else
+                    SQL_Query += (" AND (ctype = 0 or ctype = 1)");
+
+            }
             else
-                SQL_Query += (" WHERE ctype = " + ctype);
-            SQL_Query += (" LIMIT 5 OFFSET " + (PAGE * 5) + ";");
+            {
+                if (ctype == 0)
+                    SQL_Query += (" WHERE ctype = 0");
+                else
+                    SQL_Query += (" WHERE (ctype = 0 or ctype = 1)");
+            }
+            if (all)
+                SQL_Query += ";";
+            else
+                SQL_Query += (" LIMIT 5 OFFSET " + (PAGE * 5) + ";");
 
             try
             {
@@ -136,9 +152,18 @@ namespace DatabaseProject.Controllers
                             dr.Close();
                         }
 
-                    command = new MySqlCommand("SELECT COUNT(cid) FROM content;", connection);
-                    total = (Convert.ToInt32(command.ExecuteScalar()));
-                    connection.Close(); //Added close because it was always open
+                    if (TOPIC == "")
+                    {
+                        command = new MySqlCommand("SELECT COUNT(cid) FROM content;", connection);
+                        total = (Convert.ToInt32(command.ExecuteScalar()));
+                        connection.Close(); //Added close because it was always open
+                    }
+                    else
+                    {
+                        command = new MySqlCommand("SELECT COUNT(topic) FROM contopic WHERE topic = '" + TOPIC + "';", connection);
+                        total = (Convert.ToInt32(command.ExecuteScalar()));
+                        connection.Close(); //Added close because it was always open
+                    }
                 }
 
             }
@@ -164,7 +189,7 @@ namespace DatabaseProject.Controllers
         public void new_post(NewPostModel new_post)
         {   //Create a new post using data from the page and add the new post 
             int cid = 0;
-            
+
             DateTime time = DateTime.Now;
             string time_s = string.Format("{0:D4}-{1:D2}-{2:D2} {3:D2}:{4:D2}:{5:D2}", time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second);
 
@@ -174,7 +199,7 @@ namespace DatabaseProject.Controllers
             else
                 SQL_Query += "0, '";
             SQL_Query += new_post.ctext + "', " + new_post.pid + ", '" + time_s + "');";
-            
+
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
@@ -184,15 +209,21 @@ namespace DatabaseProject.Controllers
                     MySqlCommand command = new MySqlCommand(SQL_Query, connection);
                     command.ExecuteNonQuery();
 
+                    SQL_Query = "SELECT MAX(cid) FROM content;";
+                    command = new MySqlCommand(SQL_Query, connection);
+                    MySqlDataReader dr = command.ExecuteReader();
+
+                    if (dr.Read())
+                        cid = dr.GetInt32("MAX(cid)");
+                    dr.Close();
+
+                    SQL_Query = "INSERT INTO rate(pid, cid, rtg) VALUES(" + new_post.pid + "," + cid + "," + 0 + ");";
+                    command = new MySqlCommand(SQL_Query, connection);
+                    command.ExecuteNonQuery();
+
                     if (new_post.topic != null)   //We have a topic to add
                     {//First get the latest post we added to get the CID
-                        SQL_Query = "SELECT MAX(cid) FROM content;";
-                        command = new MySqlCommand(SQL_Query, connection);
-                        MySqlDataReader dr = command.ExecuteReader();
                         
-                        if (dr.Read())
-                            cid = dr.GetInt32("MAX(cid)");
-                        dr.Close();
                         //Make Query to add new topic
                         SQL_Query = "INSERT INTO contopic(cid, topic) VALUES(" + cid + ",'" + new_post.topic + "');";
                         command = new MySqlCommand(SQL_Query, connection);
@@ -203,7 +234,7 @@ namespace DatabaseProject.Controllers
             }
             catch (Exception ex)
             {
-                
+
             }
         }
     }
