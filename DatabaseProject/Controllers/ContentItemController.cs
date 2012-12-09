@@ -22,15 +22,21 @@ namespace DatabaseProject.Controllers
             if (Session["searchedPosts"] != null)
             {
                 //IncludeSearchedPosts(ref post_list, page);
-                post_list = (PostListModel)Session["searchedPosts"];
+                QueryController queryCommand = new QueryController();
+                post_list = queryCommand.get_posts(page, (string)Session["searchTopic"]);
+                Session["totalPages"] = (int)Math.Ceiling((double)post_list.total_posts/(double)5);
+                Session["isSearchedPosts"] = true; //used to preserve the number of pages that correlate to searched or regular posts
             }
             else
             {
                 QueryController queryCommand = new QueryController();
                 post_list = queryCommand.get_posts(page);
-                if (Session["totalPages"] == null)
+                if (Session["isSearchedPosts"] == null) Session["isSearchedPosts"] = false; //For initialization purposes
+                if (Session["totalPages"] == null || !(bool)Session["isSearchedPosts"])
                 {
-                    Session["totalPages"] = post_list.total_posts / 5; // Get the number of pages needed for pagination in the Content/Read page
+                    Session["totalPages"] = (int)Math.Ceiling((double)post_list.total_posts / (double)5); // Get the number of pages needed for pagination in the Content/Read page
+                    Session["isSearchPosts"] = false;
+                    Session["searchTopic"] = ""; // Resetting search topic
                 }
             }
             return View(post_list);
@@ -112,11 +118,13 @@ namespace DatabaseProject.Controllers
                 {
                     QueryController queryCommand = new QueryController();
                     PostListModel post_list = queryCommand.get_posts(0, topic.searchTopic);
+                    Session["searchTopic"] = topic.searchTopic;
                     Session["searchedPosts"] = post_list;
                     return RedirectToAction("Index");
                 }
 
                 Session["searchedPosts"] = null; // if "all": clear for future searches
+                Session["searchTopic"] = "";
                 return RedirectToAction("Index");
             }
             catch
