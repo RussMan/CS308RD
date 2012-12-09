@@ -69,7 +69,7 @@ namespace DatabaseProject.Controllers
             return View(viewModel); //Return the topics via a Topic Model
         }
 
-        public PostListModel get_posts(int PAGE = 0, string TOPIC = "", int ctype = 0)
+        public PostListModel get_posts(bool all = true, int ctype = 0, int PAGE = 0, string TOPIC = "")
         {   //Get the post based on supplied data (like page, topic, and if everyone/only logged in people can see it)
             int total = -1;
             List<PostModel> fetched_Posts = new List<PostModel>();
@@ -77,11 +77,19 @@ namespace DatabaseProject.Controllers
 
             //The following makes a custom query that changes depending on the data available
             string SQL_Query = "SELECT * FROM content";
+
             if (TOPIC != "")
-                SQL_Query += (" NATURAL JOIN contopic WHERE topic = '" + TOPIC + "' AND ctype = " + ctype);
+                SQL_Query += (" NATURAL JOIN contopic WHERE topic = '" + TOPIC + "'");
+
+            if(ctype == 0)
+                SQL_Query += (" WHERE ctype = 0");
             else
-                SQL_Query += (" WHERE ctype = " + ctype);
-            SQL_Query += (" LIMIT 5 OFFSET " + (PAGE * 5) + ";");
+                SQL_Query += (" WHERE (ctype = 0 or ctype = 1)");
+
+            if (all)
+                SQL_Query += ";";
+            else
+                SQL_Query += (" LIMIT 5 OFFSET " + (PAGE * 5) + ";");
 
             try
             {
