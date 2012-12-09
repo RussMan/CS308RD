@@ -186,15 +186,15 @@ namespace DatabaseProject.Controllers
 
                     if (new_post.topic != null)   //We have a topic to add
                     {//First get the latest post we added to get the CID
-                        SQL_Query = "SELECT MAX(cid) FROM contopic;";
+                        SQL_Query = "SELECT MAX(cid) FROM content;";
                         command = new MySqlCommand(SQL_Query, connection);
                         MySqlDataReader dr = command.ExecuteReader();
                         
                         if (dr.Read())
-                            cid = dr.GetInt32("cid");
+                            cid = dr.GetInt32("MAX(cid)");
                         dr.Close();
                         //Make Query to add new topic
-                        SQL_Query = "INSERT INTO contopic(cid, topic) VALUES(" + cid + "," + new_post.topic[0] + ");";
+                        SQL_Query = "INSERT INTO contopic(cid, topic) VALUES(" + cid + ",'" + new_post.topic + "');";
                         command = new MySqlCommand(SQL_Query, connection);
                         command.ExecuteNonQuery();
                     }
