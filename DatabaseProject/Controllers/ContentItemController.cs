@@ -23,14 +23,14 @@ namespace DatabaseProject.Controllers
             {
                 //IncludeSearchedPosts(ref post_list, page);
                 QueryController queryCommand = new QueryController();
-                post_list = queryCommand.get_posts(page, (string)Session["searchTopic"]);
+                post_list = queryCommand.get_posts(false, 1, page, (string)Session["searchTopic"]);
                 Session["totalPages"] = (int)Math.Ceiling((double)post_list.total_posts/(double)5);
                 Session["isSearchedPosts"] = true; //used to preserve the number of pages that correlate to searched or regular posts
             }
             else
             {
                 QueryController queryCommand = new QueryController();
-                post_list = queryCommand.get_posts(page);
+                post_list = queryCommand.get_posts(false, 1, page);
                 if (Session["isSearchedPosts"] == null) Session["isSearchedPosts"] = false; //For initialization purposes
                 if (Session["totalPages"] == null || !(bool)Session["isSearchedPosts"])
                 {
@@ -68,7 +68,7 @@ namespace DatabaseProject.Controllers
             QueryController queryCommand = new QueryController();
             new_post.pid = (int)HttpContext.Session["userSessionID"]; 
             queryCommand.new_post(new_post);
-            return View();
+            return RedirectToAction("Index");
         }
 
         //
@@ -117,7 +117,7 @@ namespace DatabaseProject.Controllers
                 if (topic.searchTopic != "all") // "all" will reset to default post types
                 {
                     QueryController queryCommand = new QueryController();
-                    PostListModel post_list = queryCommand.get_posts(0, topic.searchTopic);
+                    PostListModel post_list = queryCommand.get_posts(false, 1, 0, topic.searchTopic);
                     Session["searchTopic"] = topic.searchTopic;
                     Session["searchedPosts"] = post_list;
                     return RedirectToAction("Index");

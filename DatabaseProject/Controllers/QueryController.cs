@@ -79,13 +79,21 @@ namespace DatabaseProject.Controllers
             string SQL_Query = "SELECT * FROM content";
 
             if (TOPIC != "")
+            {
                 SQL_Query += (" NATURAL JOIN contopic WHERE topic = '" + TOPIC + "'");
+                if (ctype == 0)
+                    SQL_Query += (" AND ctype = 0");
+                else
+                    SQL_Query += (" AND (ctype = 0 or ctype = 1)");
 
-            if(ctype == 0)
-                SQL_Query += (" WHERE ctype = 0");
+            }
             else
-                SQL_Query += (" WHERE (ctype = 0 or ctype = 1)");
-
+            {
+                if (ctype == 0)
+                    SQL_Query += (" WHERE ctype = 0");
+                else
+                    SQL_Query += (" WHERE (ctype = 0 or ctype = 1)");
+            }
             if (all)
                 SQL_Query += ";";
             else
@@ -144,9 +152,18 @@ namespace DatabaseProject.Controllers
                             dr.Close();
                         }
 
-                    command = new MySqlCommand("SELECT COUNT(cid) FROM content;", connection);
-                    total = (Convert.ToInt32(command.ExecuteScalar()));
-                    connection.Close(); //Added close because it was always open
+                    if (TOPIC == "")
+                    {
+                        command = new MySqlCommand("SELECT COUNT(cid) FROM content;", connection);
+                        total = (Convert.ToInt32(command.ExecuteScalar()));
+                        connection.Close(); //Added close because it was always open
+                    }
+                    else
+                    {
+                        command = new MySqlCommand("SELECT COUNT(topic) FROM contopic WHERE topic = '" + TOPIC + "';", connection);
+                        total = (Convert.ToInt32(command.ExecuteScalar()));
+                        connection.Close(); //Added close because it was always open
+                    }
                 }
 
             }
@@ -192,15 +209,21 @@ namespace DatabaseProject.Controllers
                     MySqlCommand command = new MySqlCommand(SQL_Query, connection);
                     command.ExecuteNonQuery();
 
+                    SQL_Query = "SELECT MAX(cid) FROM content;";
+                    command = new MySqlCommand(SQL_Query, connection);
+                    MySqlDataReader dr = command.ExecuteReader();
+
+                    if (dr.Read())
+                        cid = dr.GetInt32("MAX(cid)");
+                    dr.Close();
+
+                    SQL_Query = "INSERT INTO rate(pid, cid, rtg) VALUES(" + new_post.pid + "," + cid + "," + 0 + ");";
+                    command = new MySqlCommand(SQL_Query, connection);
+                    command.ExecuteNonQuery();
+
                     if (new_post.topic != null)   //We have a topic to add
                     {//First get the latest post we added to get the CID
-                        SQL_Query = "SELECT MAX(cid) FROM content;";
-                        command = new MySqlCommand(SQL_Query, connection);
-                        MySqlDataReader dr = command.ExecuteReader();
-
-                        if (dr.Read())
-                            cid = dr.GetInt32("MAX(cid)");
-                        dr.Close();
+                        
                         //Make Query to add new topic
                         SQL_Query = "INSERT INTO contopic(cid, topic) VALUES(" + cid + ",'" + new_post.topic + "');";
                         command = new MySqlCommand(SQL_Query, connection);
