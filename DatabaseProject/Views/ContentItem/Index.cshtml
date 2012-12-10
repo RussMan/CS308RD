@@ -33,7 +33,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
                  <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#mainaccordion" href="#@accordionNumber">
-                    Post #@x.cid by @x.fname at @x.ptime
+                    <i>Post #@x.cid by @x.fname at @x.ptime</i>
                  </a>
             </div>
             <div id="@accordionNumber" class="accordion-body collapse">
@@ -42,41 +42,49 @@
                 </div>
                 @using (Html.BeginForm("Index", "ContentItem", new { id = x.cid}))
                 {
-                    <div>
-                        <span class="label">
-                            <i class="icon-thumbs-up"></i>
-                            <i class="icon-thumbs-up"></i>
-                        <span>
-                        @Html.RadioButtonFor(post => post.rating.rate, 2)
+                    <div class="well">
+                        <div class="row">
+                            <div class="span1">
+                                <span class="label label-success">
+                                    <i class="icon-thumbs-up"></i>
+                                    <i class="icon-thumbs-up"></i>
+                                <span>
+                                @Html.RadioButtonFor(post => post.rating.rate, 2)
+                            </div>
+                            <div class="span1">
+                                <span class="label label-success">
+                                    <i class="icon-thumbs-up"></i>
+                                <span>
+                                @Html.RadioButtonFor(post => post.rating.rate, 1)
+                            </div>
+                            <div class="span1">
+                                <span class="label">
+                                    0
+                                <span>
+                                @Html.RadioButtonFor(post => post.rating.rate, 0)
+                            </div>
+                            <div class="span1">
+                                <span class="label label-important">
+                                    <i class="icon-thumbs-down"></i>
+                                <span>
+                                @Html.RadioButtonFor(post => post.rating.rate, -1)
+                            </div>
+                            <div class="span1">
+                                <span class="label label-important">
+                                    <i class="icon-thumbs-down"></i>
+                                    <i class="icon-thumbs-down"></i>
+                                <span>
+                                @Html.RadioButtonFor(post => post.rating.rate, -2)
+                            </div>
+                            <div class="span1">
+                                <button class="btn btn-small btn-primary" type="submit">
+                                    <i class="icon-ok"></i>Rate!
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <span class="label">
-                            <i class="icon-thumbs-up"></i>
-                        <span>
-                        @Html.RadioButtonFor(post => post.rating.rate, 1)
-                    </div>
-                    <div>
-                        <span class="label">
-                            0
-                        <span>
-                        @Html.RadioButtonFor(post => post.rating.rate, 0)
-                    </div>
-                    <div>
-                        <span class="label">
-                            <i class="icon-thumbs-down"></i>
-                        <span>
-                        @Html.RadioButtonFor(post => post.rating.rate, -1)
-                    </div>
-                    <div>
-                        <span class="label">
-                            <i class="icon-thumbs-down"></i>
-                            <i class="icon-thumbs-down"></i>
-                        <span>
-                        @Html.RadioButtonFor(post => post.rating.rate, -2)
-                    </div>
-                    <button class="btn btn-small" type="submit">Rate!</button>
                 }
-                <p><i>Average rating for this post is @x.avg_rtg</i></p>
+                <p><strong><i>Average rating for this post is @x.avg_rtg</i></strong></p>
             </div> @*--End accordion body*@
         </div>@*--End accordion group*@
         accordionNumber++;
