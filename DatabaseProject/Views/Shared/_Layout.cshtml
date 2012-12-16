@@ -54,6 +54,13 @@
                                                         <i class="icon-comment icon-white"></i>
                                                         Content
                                                     </a>
+                                                </li>
+                                                <li class="divider-vertical"></li>
+                                                <li class="@(ViewBag.Active == "Privacy" ? "active" : "")">
+                                                    <a href="@Url.Action("Index","Privacy")">
+                                                        <i class="icon-lock icon-white"></i>
+                                                        Privacy
+                                                    </a>
                                                 </li>                                            
                                             </ul>
                                         </div>

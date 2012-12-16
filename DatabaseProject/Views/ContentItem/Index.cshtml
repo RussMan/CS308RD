@@ -1,12 +1,13 @@
 @model DatabaseProject.Models.PostListModel
+@using System.Web.Mvc;
+@using System.Text;
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_ContentLayout.cshtml";
     int accordionNumber = 0;
 }
-@using System.Web.Mvc;
-@using System.Text;
+
 @functions 
 {
     public int DeterminePreviousPage()

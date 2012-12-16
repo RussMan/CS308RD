@@ -72,30 +72,6 @@ namespace DatabaseProject.Controllers
         }
 
         //
-        // GET: /ContentItem/Edit/
-        public ActionResult Edit(/*int id*/)
-        {
-            return View();
-        }
-
-        //
-        // POST: /ContentItem/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        //
         // GET: /ContentItem/Search
         public ActionResult Search()
         {

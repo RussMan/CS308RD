@@ -1,0 +1,29 @@
+﻿@model DatabaseProject.Models.PrivacyModel
+
+@{
+    ViewBag.Title = "Remove";
+    Layout = "~/Views/Shared/_PrivacyLayout.cshtml";
+    //testing
+    List<int> numbers = new List<int>();
+    List<SelectListItem> choices = new List<SelectListItem>();
+    numbers.Add(1);
+    numbers.Add(2);
+    numbers.Add(3);
+    numbers.Add(4);
+    numbers.Add(5);
+    foreach (int y in numbers)
+    {
+        choices.Add(new SelectListItem { Text = y.ToString(), Value = y.ToString() });
+    }
+}
+
+<h3>Please choose which group to remove from</h3>
+@using(Html.BeginForm("RemoveUser","Privacy"))
+{
+    <fiedset>
+        <div class"input-append">
+            @Html.DropDownListFor(m => m.group, (IEnumerable<SelectListItem>)choices, "--select a group--")
+            <button class="btn" type="submit"><i class="icon-search"></i></button>
+        </div>
+    </fiedset>
+}

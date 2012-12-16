@@ -1,0 +1,27 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Content Home Page";
+}
+
+<div class="row">
+    <div class="span2">
+        <div class="tabbable tabs-left pull-left">
+            <ul class="nav nav-tabs">
+                <li>
+                    <a href="@Url.Action("Index", "Privacy")" data-toggle="body"><i class="icon-user"></i>View Groups</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Add","Privacy")" data-toggle="body"><i class="icon-plus-sign"></i>Add</a>
+                 </li>
+                <li>
+                    <a href="@Url.Action("Remove","Privacy")" data-toggle="body"><i class="icon-minus-sign"></i>Remove</a>
+                </li>
+            </ul>
+        </div> @*--End tabbable*@
+    </div>@*--End span2*@
+    <div class="span7">
+        <div class="body pull-left">
+            @RenderBody()
+        </div> @*--End body*@
+    </div> @*--End span6*@
+</div>@*--End row*@
