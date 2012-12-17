@@ -48,8 +48,16 @@ namespace DatabaseProject.Models
         [Required]
         public int pid { get; set; }
 
+        public string ftype { get; set; }
+
         [Display(Name = "Topic")]
         public string topic { get; set; }   //Optional topic
+    }
+
+    public class NewPost_UI_Data
+    {
+        public NewPostModel new_post { get; set; }
+        public List<string> friendships { get; set; }
     }
 
     public class SearchModel // Used for getting search entry from user to perform post look up by topic

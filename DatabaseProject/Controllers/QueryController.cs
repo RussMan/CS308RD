@@ -26,7 +26,7 @@ namespace DatabaseProject.Controllers
                     MySqlCommand command = new MySqlCommand("REPLACE INTO rate SET pid = " + SESSION_PID + ", cid = " + RATED_CID +
                                                             ", rtg = " + RATING + ";", connection);
                     command.ExecuteNonQuery();
-                    connection.Close();
+                    connection.Close(); 
                 }
             }
             catch (Exception ex)
@@ -69,7 +69,7 @@ namespace DatabaseProject.Controllers
             return View(viewModel); //Return the topics via a Topic Model
         }
 
-        public PostListModel get_posts(bool all = true, int ctype = 0, int PAGE = 0, string TOPIC = "")
+        public PostListModel get_posts(int reader, bool all = true, int ctype = 0, int PAGE = 0, string TOPIC = "")
         {   //Get the post based on supplied data (like page, topic, and if everyone/only logged in people can see it)
             int total = -1;
             List<PostModel> fetched_Posts = new List<PostModel>();
@@ -78,22 +78,22 @@ namespace DatabaseProject.Controllers
             //The following makes a custom query that changes depending on the data available
             string SQL_Query = "SELECT * FROM content";
 
-            if (TOPIC != "")
+            if (reader != 0)
             {
-                SQL_Query += (" NATURAL JOIN contopic WHERE topic = '" + TOPIC + "'");
-                if (ctype == 0)
-                    SQL_Query += (" AND ctype = 0");
+                if (TOPIC != "")
+                {
+                    SQL_Query += (" NATURAL JOIN contopic WHERE (cid IN (SELECT cid FROM friend NATURAL JOIN visible WHERE reader = " + reader + ") OR cid NOT IN (SELECT cid FROM visible) OR poster = " + reader + ") AND topic = '" + TOPIC + "';");
+                }
                 else
-                    SQL_Query += (" AND (ctype = 0 or ctype = 1)");
-
+                {
+                    SQL_Query += (" WHERE (cid IN (SELECT cid FROM friend NATURAL JOIN visible WHERE reader = " + reader + ") OR cid NOT IN (SELECT cid FROM visible) OR poster = " + reader + ")");
+                }
             }
             else
             {
-                if (ctype == 0)
-                    SQL_Query += (" WHERE ctype = 0");
-                else
-                    SQL_Query += (" WHERE (ctype = 0 or ctype = 1)");
+                SQL_Query += (" WHERE ctype = 0");
             }
+
             if (all)
                 SQL_Query += ";";
             else
@@ -138,7 +138,10 @@ namespace DatabaseProject.Controllers
                         command = new MySqlCommand("SELECT AVG(rtg) FROM rate WHERE cid = " + x.cid + ";", connection);
                         dr = command.ExecuteReader();
                         if (dr.Read())
-                            x.avg_rtg = dr.GetInt32(0);
+                            if (!dr.IsDBNull(0))
+                                x.avg_rtg = dr.GetInt32(0);
+                            else
+                                x.avg_rtg = int.MinValue;
                         dr.Close();
                     }
 
@@ -154,7 +157,7 @@ namespace DatabaseProject.Controllers
 
                     if (TOPIC == "")
                     {
-                        command = new MySqlCommand("SELECT COUNT(cid) FROM content;", connection);
+                        command = new MySqlCommand("SELECT COUNT(cid) FROM content WHERE (cid IN (SELECT cid FROM friend NATURAL JOIN visible WHERE reader = " + reader + ") OR cid NOT IN (SELECT cid FROM visible) OR poster = " + reader + ");", connection);
                         total = (Convert.ToInt32(command.ExecuteScalar()));
                         connection.Close(); //Added close because it was always open
                     }
@@ -182,6 +185,33 @@ namespace DatabaseProject.Controllers
             return post_list;
         }
 
+        public List<string> get_friendship(int pid)
+        {
+            List<string> friends = new List<string>();
+
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
+                {
+                    if (connection.State != System.Data.ConnectionState.Open)
+                        connection.Open();
+                    MySqlCommand command = new MySqlCommand("SELECT ftype FROM pft WHERE poster = " + pid + ";", connection);
+                    MySqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        friends.Add(dr.GetString("ftype"));
+                    }
+                    dr.Close();
+                    connection.Close();//Added close because it was always open
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+
+            return friends;
+        }
         /*****************************************************************************************
          *                                POSTING RELATED ACTIONS                                *
          *****************************************************************************************/
@@ -193,7 +223,7 @@ namespace DatabaseProject.Controllers
             DateTime time = DateTime.Now;
             string time_s = string.Format("{0:D4}-{1:D2}-{2:D2} {3:D2}:{4:D2}:{5:D2}", time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second);
 
-            string SQL_Query = "INSERT INTO content(ctype, ctext, poster, ptime) VALUES( ";
+            string SQL_Query = "INSERT INTO content(ctype, ctext, poster, ptime) VALUES(";
             if (new_post.ctype)
                 SQL_Query += "1, '";
             else
@@ -220,6 +250,13 @@ namespace DatabaseProject.Controllers
                     SQL_Query = "INSERT INTO rate(pid, cid, rtg) VALUES(" + new_post.pid + "," + cid + "," + 0 + ");";
                     command = new MySqlCommand(SQL_Query, connection);
                     command.ExecuteNonQuery();
+
+                    if (new_post.ctype)
+                    {
+                        SQL_Query = "INSERT INTO visible(cid, poster, ftype) VALUES(" + cid + "," + new_post.pid + ",'" + new_post.ftype + "');";
+                        command = new MySqlCommand(SQL_Query, connection);
+                        command.ExecuteNonQuery();
+                    }
 
                     if (new_post.topic != null)   //We have a topic to add
                     {//First get the latest post we added to get the CID

@@ -1,5 +1,4 @@
-﻿@model DatabaseProject.Models.PostListModel
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Content Home Page";
 }
@@ -27,9 +26,6 @@
                 <li>
                     <a href="@Url.Action("Write","ContentItem")" data-toggle="body"><i class="icon-pencil"></i>Write</a>
                  </li>
-                <li>
-                    <a href="@Url.Action("Edit","ContentItem")" data-toggle="body">Edit</a>
-                </li>
                 <li>
                     <a href="@Url.Action("Search", "ContentItem")" data-toggle"body"><i class="icon-search"></i>Search</a>
                 </li>

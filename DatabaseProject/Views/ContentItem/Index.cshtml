@@ -84,7 +84,14 @@
                         </div>
                     </div>
                 }
+                @if (x.avg_rtg != int.MinValue)
+                {
                 <p><strong><i>Average rating for this post is @x.avg_rtg</i></strong></p>
+                }
+                else
+                {
+                <p><strong><i>There are no ratings for this post.</i></strong></p>
+                }
             </div> @*--End accordion body*@
         </div>@*--End accordion group*@
         accordionNumber++;
