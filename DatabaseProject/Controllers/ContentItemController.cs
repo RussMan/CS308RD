@@ -19,7 +19,7 @@ namespace DatabaseProject.Controllers
         {
             Session["currentPage"] = page;
             PostListModel post_list = new PostListModel();
-            if (Session["searchedPosts"] != null)
+            if (Session["searchTopic"] != null)
             {
                 //IncludeSearchedPosts(ref post_list, page);
                 QueryController queryCommand = new QueryController();
@@ -96,46 +96,25 @@ namespace DatabaseProject.Controllers
 
                 if (topic.searchTopic != "all") // "all" will reset to default post types
                 {
-                    QueryController queryCommand = new QueryController();
-                    PostListModel post_list = queryCommand.get_posts((int)HttpContext.Session["userSessionID"], false, 1, 0, topic.searchTopic);
+                    //QueryController queryCommand = new QueryController();
+                    //PostListModel post_list = queryCommand.get_posts((int)HttpContext.Session["userSessionID"], false, 1, 0, topic.searchTopic);
                     Session["searchTopic"] = topic.searchTopic;
-                    Session["searchedPosts"] = post_list;
+                    //Session["searchedPosts"] = post_list;
                     return RedirectToAction("Index");
                 }
+                else
+                {
 
-                Session["searchedPosts"] = null; // if "all": clear for future searches
-                Session["searchTopic"] = "";
-                return RedirectToAction("Index");
+                    //Session["searchedPosts"] = null; // if "all": clear for future searches
+                    Session["searchTopic"] = null;
+                    Session["totalPages"] = null;
+                    return RedirectToAction("Index");
+                }
             }
             catch
             {
                 return View();
             }
         }
-
-        //public void IncludeSearchedPosts(ref PostListModel post_list, int page = 0)
-        //{
-        //    PostListModel searchedPosts = (PostListModel)Session["searchedPosts"]; // Type cast to get posts from Global object "Session"
-        //    post_list.total_posts += searchedPosts.total_posts;
-        //    post_list.posts = searchedPosts.posts;
-        //    post_list.cid_list = searchedPosts.cid_list;
-        //    Session["searchedPosts"] = null; // Allow for new search posts to be stored
-        //    QueryController queryCommand = new QueryController();
-        //    PostListModel regularPosts = queryCommand.get_posts(page);
-        //    PostEqualityComparer postComparator = new PostEqualityComparer();
-        //    CIDEqualityComparer CIDComparator = new CIDEqualityComparer();
-        //    foreach (var x in regularPosts.posts) // N^2 running time, but acceptable due to max of 5 posts within the list anyway...
-        //    {
-        //        if(!post_list.posts.Contains(x,postComparator)) // Prevent duplicates
-        //        {
-        //            post_list.posts.Add(x);
-        //            post_list.total_posts++;
-        //        }
-        //    }
-        //    foreach (var x in regularPosts.cid_list) // N^2 running time, but acceptable due to max of 5 posts within the list anyway...
-        //    {
-        //        if(!post_list.cid_list.Contains(x, CIDComparator)) post_list.cid_list.Add(x); // Prevent duplicates
-        //    }
-        //}
     }
 }
