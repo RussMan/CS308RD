@@ -3,18 +3,17 @@
 @{
     ViewBag.Title = "RemoveUser";
     Layout = "~/Views/Shared/_PrivacyLayout.cshtml";
-    //testing
-    List<int> numbers = new List<int>();
-    List<SelectListItem> choices = new List<SelectListItem>();
-    numbers.Add(1);
-    numbers.Add(2);
-    numbers.Add(3);
-    numbers.Add(4);
-    numbers.Add(5);
-    foreach (int y in numbers)
+}
+
+@{
+    List<SelectListItem> user_lst = new List<SelectListItem>();
+
+    foreach (var x in Model.users)
     {
-        choices.Add(new SelectListItem { Text = y.ToString(), Value = y.ToString() });
+        user_lst.Add(new SelectListItem() { Text = (x.Value.Key + ", " + x.Value.Value), Value = x.Key.ToString(), Selected = false });   
     }
+
+    SelectList users = new SelectList(user_lst, "Value", "Text");
 }
 
 <h3>Please select which user to remove</h3>
@@ -22,7 +21,7 @@
 {
     <fiedset>
         <div class="input-append">
-            @Html.DropDownListFor(m => m.user, (IEnumerable<SelectListItem>)choices, "--select a user--")            
+            @Html.DropDownListFor(m => m.user, users)           
             <button class="btn" type="submit"><i class="icon-minus"></i>Remove</button>
         </div>
     </fiedset>

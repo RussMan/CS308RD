@@ -23,14 +23,14 @@ namespace DatabaseProject.Controllers
             {
                 //IncludeSearchedPosts(ref post_list, page);
                 QueryController queryCommand = new QueryController();
-                post_list = queryCommand.get_posts(false, 1, page, (string)Session["searchTopic"]);
+                post_list = queryCommand.get_posts((int)HttpContext.Session["userSessionID"], false, 1, page, (string)Session["searchTopic"]);
                 Session["totalPages"] = (int)Math.Ceiling((double)post_list.total_posts/(double)5);
                 Session["isSearchedPosts"] = true; //used to preserve the number of pages that correlate to searched or regular posts
             }
             else
             {
                 QueryController queryCommand = new QueryController();
-                post_list = queryCommand.get_posts(false, 1, page);
+                post_list = queryCommand.get_posts((int)HttpContext.Session["userSessionID"], false, 1, page);
                 if (Session["isSearchedPosts"] == null) Session["isSearchedPosts"] = false; //For initialization purposes
                 if (Session["totalPages"] == null || !(bool)Session["isSearchedPosts"])
                 {
@@ -49,25 +49,29 @@ namespace DatabaseProject.Controllers
         {                                                         // If page parameter, URL may not know which to go to and throw an error
             QueryController queryCommand = new QueryController();
             queryCommand.rate_post((int)HttpContext.Session["userSessionID"], id, postList.rating.rate); // id is in reference to the CID (post ID)
-            PostListModel post_list = queryCommand.get_posts();
-            return View(post_list);
+            //PostListModel post_list = queryCommand.get_posts((int)HttpContext.Session["userSessionID"]);
+            //return View(post_list);
+            return RedirectToAction("Index");
         }
 
         //
         // GET: /ContentItem/Write
         public ActionResult Write()
         {
-            return View();
+            NewPost_UI_Data post_data = new NewPost_UI_Data { new_post = new NewPostModel(), friendships = new List<string>() };
+            QueryController queryCommand = new QueryController();
+            post_data.friendships = queryCommand.get_friendship((int)HttpContext.Session["userSessionID"]);
+            return View(post_data);
         }
         
         //
         // POST: /ContentItem/Write
         [HttpPost]
-        public ActionResult Write(NewPostModel new_post)
+        public ActionResult Write(NewPost_UI_Data post_data)
         {
             QueryController queryCommand = new QueryController();
-            new_post.pid = (int)HttpContext.Session["userSessionID"]; 
-            queryCommand.new_post(new_post);
+            post_data.new_post.pid = (int)HttpContext.Session["userSessionID"]; 
+            queryCommand.new_post(post_data.new_post);
             return RedirectToAction("Index");
         }
 
@@ -93,7 +97,7 @@ namespace DatabaseProject.Controllers
                 if (topic.searchTopic != "all") // "all" will reset to default post types
                 {
                     QueryController queryCommand = new QueryController();
-                    PostListModel post_list = queryCommand.get_posts(false, 1, 0, topic.searchTopic);
+                    PostListModel post_list = queryCommand.get_posts((int)HttpContext.Session["userSessionID"], false, 1, 0, topic.searchTopic);
                     Session["searchTopic"] = topic.searchTopic;
                     Session["searchedPosts"] = post_list;
                     return RedirectToAction("Index");

@@ -3,6 +3,19 @@
     ViewBag.Title = "Content Home Page";
 }
 
+@section featured 
+{
+    <section class="featured">
+        <div class="hero-unit">
+            <h2>@ViewBag.Message</h2>
+            <p>This is will be one of the "extra features" we will implement. The titles of the
+            latest entered topics from people within the user's friends will be displayed here.</p>
+            <p><a href="http://asp.net/mvc" class="btn btn-primary btn-large" 
+              style="color: White;">To learn more about ASP.NET MVC visit &raquo;</a></p>
+        </div>
+    </section>
+}
+
 <div class="row">
     <div class="span2">
         <div class="tabbable tabs-left pull-left">
@@ -13,6 +26,12 @@
                 <li>
                     <a href="@Url.Action("Write","ContentItem")" data-toggle="body"><i class="icon-pencil"></i>Write</a>
                  </li>
+<<<<<<< HEAD
+=======
+                @*<li>
+                    <a href="@Url.Action("Groups","ContentItem")" data-toggle="body">Groups</a>
+                </li>*@
+>>>>>>> 33c41a7956f3d1b075fea70ee41a9a9dd490c823
                 <li>
                     <a href="@Url.Action("Search", "ContentItem")" data-toggle"body"><i class="icon-search"></i>Search</a>
                 </li>

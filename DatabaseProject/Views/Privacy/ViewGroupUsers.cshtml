@@ -3,24 +3,14 @@
 @{
     ViewBag.Title = "View Group Users";
     Layout = "~/Views/Shared/_PrivacyLayout.cshtml";
-    //testing
-    List<int>numbers = new List<int>();
-    List<SelectListItem> choices = new List<SelectListItem>();
-    numbers.Add(6);
-    numbers.Add(7);
-    numbers.Add(8);
-    numbers.Add(9);
-    numbers.Add(10);
-    foreach(int y in numbers)
-    {
-        choices.Add(new SelectListItem {Text=y.ToString(), Value=y.ToString()});
-    }
 }
 
 <h2>Your Group's Users</h2>
 <ul>
-    @foreach (var y in numbers)
+    @foreach(var x in Model.users)
     {
-        <li>@y</li>
+        <li>@x.Value.Key
+        ,
+        @x.Value.Value</li>
     }
 </ul>

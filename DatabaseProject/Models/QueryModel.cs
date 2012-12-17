@@ -49,8 +49,16 @@ namespace DatabaseProject.Models
         [Required]
         public int pid { get; set; }
 
+        public string ftype { get; set; }
+
         [Display(Name = "Topic")]
         public string topic { get; set; }   //Optional topic
+    }
+
+    public class NewPost_UI_Data
+    {
+        public NewPostModel new_post { get; set; }
+        public List<string> friendships { get; set; }
     }
 
     public class SearchModel // Used for getting search entry from user to perform post look up by topic
@@ -60,37 +68,9 @@ namespace DatabaseProject.Models
 
     public class PrivacyModel
     {
-        public List<string> Groups { get; set; }
+        public List<string> groups { get; set; }
         public string group { get; set; }
-        public List<string> Users { get; set; }
+        public List<KeyValuePair<int, KeyValuePair<string, string>>> users { get; set; }
         public string user { get; set; }
     }
-    //class PostEqualityComparer : IEqualityComparer<PostModel> // For comparing posts to prevent duplicates
-    //{
-    //    public bool Equals(PostModel x, PostModel y)
-    //    {
-    //        if (x.cid == y.cid) return true;
-    //        else return false;
-    //    }
-
-    //    public int GetHashCode(PostModel post)
-    //    {
-    //        int hashCode = post.cid ^ post.pid;
-    //        return hashCode.GetHashCode();
-    //    }
-    //}
-
-    //class CIDEqualityComparer : IEqualityComparer<int> // For comparing CIDs in the CID List [prevents some enumeration exception]
-    //{
-    //    public bool Equals(int x, int y)
-    //    {
-    //        if (x == y) return true;
-    //        else return false;
-    //    }
-
-    //    public int GetHashCode(int x)
-    //    {
-    //        return x.GetHashCode();
-    //    }
-    //}
 }
