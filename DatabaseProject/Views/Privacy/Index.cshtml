@@ -21,7 +21,7 @@
 @using(Html.BeginForm("ViewGroupUsers","Privacy"))
 {
     <fiedset>
-        <div class"input-append">
+        <div class="input-append">
             @Html.DropDownListFor(m=>m.group, (IEnumerable<SelectListItem>)choices, "--select a group--")
             <button class="btn" type="submit"><i class="icon-search"></i></button>
         </div>

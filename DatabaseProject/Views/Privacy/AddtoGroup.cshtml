@@ -1,7 +1,7 @@
 ﻿@model DatabaseProject.Models.PrivacyModel
 
 @{
-    ViewBag.Title = "RemoveUser";
+    ViewBag.Title = "AddtoGroup";
     Layout = "~/Views/Shared/_PrivacyLayout.cshtml";
     //testing
     List<int> numbers = new List<int>();
@@ -17,13 +17,13 @@
     }
 }
 
-<h3>Please choose which user to remove</h3>
-@using(Html.BeginForm("RemoveUserFromGroup","Privacy"))
+<h3>Please choose which user to add</h3>
+@using(Html.BeginForm("AddUserToGroup","Privacy"))
 {
     <fiedset>
         <div class="input-append">
             @Html.DropDownListFor(m => m.user, (IEnumerable<SelectListItem>)choices, "--select a user--")            
-            <button class="btn" type="submit"><i class="icon-minus"></i>Remove</button>
+            <button class="btn" type="submit"><i class="icon-plus"></i>Add</button>
         </div>
     </fiedset>
 }
