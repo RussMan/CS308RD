@@ -82,7 +82,7 @@ namespace DatabaseProject.Controllers
             {
                 if (TOPIC != "")
                 {
-                    SQL_Query += (" NATURAL JOIN contopic WHERE (cid IN (SELECT cid FROM friend NATURAL JOIN visible WHERE reader = " + reader + ") OR cid NOT IN (SELECT cid FROM visible) OR poster = " + reader + ") AND topic = '" + TOPIC + "';");
+                    SQL_Query += (" NATURAL JOIN contopic WHERE (cid IN (SELECT cid FROM friend NATURAL JOIN visible WHERE reader = " + reader + ") OR cid NOT IN (SELECT cid FROM visible) OR poster = " + reader + ") AND topic = '" + TOPIC + "'");
                 }
                 else
                 {
