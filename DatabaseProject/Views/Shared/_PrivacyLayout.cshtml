@@ -11,10 +11,16 @@
                     <a href="@Url.Action("Index", "Privacy")" data-toggle="body"><i class="icon-user"></i>View Groups</a>
                 </li>
                 <li>
-                    <a href="@Url.Action("Add","Privacy")" data-toggle="body"><i class="icon-plus-sign"></i>Add</a>
+                    <a href="@Url.Action("AddGroup", "Privacy")" data-toggle="body"><i class="icon-plus-sign"></i>Add Group</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("RemoveGroup", "Privacy")" data-toggle="body"><i class="icon-minus-sign"></i>Remove Group</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Add","Privacy")" data-toggle="body"><i class="icon-plus-sign"></i>Add User</a>
                  </li>
                 <li>
-                    <a href="@Url.Action("Remove","Privacy")" data-toggle="body"><i class="icon-minus-sign"></i>Remove</a>
+                    <a href="@Url.Action("Remove","Privacy")" data-toggle="body"><i class="icon-minus-sign"></i>Remove User</a>
                 </li>
             </ul>
         </div> @*--End tabbable*@

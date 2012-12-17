@@ -24,12 +24,67 @@ namespace DatabaseProject.Controllers
         public ActionResult ViewGroupUsers(PrivacyModel privacyModel)
         {
             //Add your query command here using the 'group' parameter
-            //return Content(privacyModel.group);
+            try
+            {
+                // TODO: Query that pulls all the members of a user's selected group
+                return View();
+            }
+            catch
+            {
+                return RedirectToAction("Index"); // Query failed, return to main page of Privacy section
+            }
+        }
+
+        //
+        // GET: /Privacy/AddGroup
+        [Authorize]
+        public ActionResult AddGroup()
+        {
             return View();
         }
 
         //
+        // POST: /Privacy/AddNewGroup
+        [HttpPost]
+        public ActionResult AddNewGroup(PrivacyModel privacyModel)
+        {
+            try
+            {
+                //TODO: Query to add new group here
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return RedirectToAction("AddGroup"); //Query failed, ask for group again...
+            }
+        }
+
+        //
+        // GET: /Privacy/RemoveGroup
+        [Authorize]
+        public ActionResult RemoveGroup()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Privacy/RemoveUserGroup
+        [HttpPost]
+        public ActionResult RemoveUserGroup(PrivacyModel privacyModel)
+        {
+            try
+            {
+                // TODO: Query that removes select group from list of user's groups
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return RedirectToAction("RemoveGroup"); // Query failed, ask again for a group to remove
+            }
+        }
+        //
         // GET: /Privacy/Add
+        [Authorize]
         public ActionResult Add()
         {
             return View();
@@ -68,9 +123,10 @@ namespace DatabaseProject.Controllers
         }
         //
         // GET: /Privacy/Remove/
+        [Authorize]
         public ActionResult Remove()
         {
-            return View(); // Presents user with groups to delet user from
+            return View(); // Presents user with groups to delete user from
         }
 
         //

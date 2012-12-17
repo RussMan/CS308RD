@@ -327,6 +327,8 @@
     <Content Include="Views\Privacy\Remove.cshtml" />
     <Content Include="Views\Privacy\RemoveUser.cshtml" />
     <Content Include="Views\Privacy\AddtoGroup.cshtml" />
+    <Content Include="Views\Privacy\AddGroup.cshtml" />
+    <Content Include="Views\Privacy\RemoveGroup.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
