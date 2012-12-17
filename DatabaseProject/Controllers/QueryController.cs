@@ -247,10 +247,6 @@ namespace DatabaseProject.Controllers
                         cid = dr.GetInt32("MAX(cid)");
                     dr.Close();
 
-                    SQL_Query = "INSERT INTO rate(pid, cid, rtg) VALUES(" + new_post.pid + "," + cid + "," + 0 + ");";
-                    command = new MySqlCommand(SQL_Query, connection);
-                    command.ExecuteNonQuery();
-
                     if (new_post.ctype)
                     {
                         SQL_Query = "INSERT INTO visible(cid, poster, ftype) VALUES(" + cid + "," + new_post.pid + ",'" + new_post.ftype + "');";

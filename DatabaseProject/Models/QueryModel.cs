@@ -27,6 +27,7 @@ namespace DatabaseProject.Models
     {
         public int rate { get; set; }
     }
+
     public class PostListModel
     {
         public List<PostModel> posts { get; set; }
@@ -65,6 +66,13 @@ namespace DatabaseProject.Models
         public string searchTopic { get; set; }
     }
 
+    public class PrivacyModel
+    {
+        public List<string> Groups { get; set; }
+        public string group { get; set; }
+        public List<string> Users { get; set; }
+        public string user { get; set; }
+    }
     //class PostEqualityComparer : IEqualityComparer<PostModel> // For comparing posts to prevent duplicates
     //{
     //    public bool Equals(PostModel x, PostModel y)
