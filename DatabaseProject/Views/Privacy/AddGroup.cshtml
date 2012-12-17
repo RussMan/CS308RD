@@ -1,0 +1,17 @@
+﻿@model DatabaseProject.Models.PrivacyModel
+
+@{
+    ViewBag.Title = "AddGroup";
+    Layout = "~/Views/Shared/_PrivacyLayout.cshtml";
+}
+
+<h3>Please enter in the name of a new group</h3>
+@using(Html.BeginForm("AddNewGroup","Privacy"))
+{
+    <fiedset>
+        <div class="input-append">
+            @Html.TextBoxFor(m=>m.group)
+            <button class="btn" type="submit"><i class="icon-plus"></i>Add group</button>
+        </div>
+    </fiedset>
+}
