@@ -249,7 +249,7 @@ namespace DatabaseProject.Controllers
                 {
                     if (connection.State != System.Data.ConnectionState.Open)
                         connection.Open();
-                    MySqlCommand command = new MySqlCommand("SELECT pid, fname, lname FROM person WHERE pid NOT IN (SELECT reader FROM friend WHERE poster = " + pid + " AND ftype = '" + group + "');", connection);
+                    MySqlCommand command = new MySqlCommand("SELECT pid, fname, lname FROM person WHERE pid NOT IN (SELECT reader FROM friend WHERE poster = " + pid + " AND ftype = '" + group + "') AND pid != " + pid + ";", connection);
                     MySqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
                     {
@@ -265,6 +265,52 @@ namespace DatabaseProject.Controllers
             }
 
             return users;
+        }
+
+        //INSERT INTO pft(poster, ftype) VALUES
+
+        public void add_group(int poster, string ftype)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
+                {
+                    if (connection.State != System.Data.ConnectionState.Open)
+                        connection.Open();
+                    MySqlCommand command = new MySqlCommand("INSERT INTO pft(poster, ftype) VALUES(" + poster + ", '" + ftype + "');", connection);
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public void remove_group(int poster, string ftype)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
+                {
+                    if (connection.State != System.Data.ConnectionState.Open)
+                        connection.Open();
+                    MySqlCommand command = new MySqlCommand("DELETE FROM friend WHERE poster = " + poster + " AND ftype = '" + ftype + "';", connection);
+                    command.ExecuteNonQuery();
+
+                    command = new MySqlCommand("DELETE FROM visible WHERE poster = " + poster + " AND ftype = '" + ftype + "';", connection);
+                    command.ExecuteNonQuery();
+
+                    command = new MySqlCommand("DELETE FROM pft WHERE poster = " + poster + " AND ftype = '" + ftype + "';", connection);
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public void add_to_group(int poster, string reader, string ftype)

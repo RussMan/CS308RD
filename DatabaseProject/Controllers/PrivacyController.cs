@@ -92,5 +92,44 @@ namespace DatabaseProject.Controllers
             queryCommand.remove_from_group((int)HttpContext.Session["userSessionID"], privacyModel.user, (string)HttpContext.Session["userGroup"]);
             return RedirectToAction("Index");
         }
+
+        //
+        // GET: /Privacy/AddGroup
+        [Authorize]
+        public ActionResult AddGroup()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Privacy/AddNewGroup
+        [HttpPost]
+        public ActionResult AddNewGroup(PrivacyModel privacyModel)
+        {
+            QueryController queryCommand = new QueryController();
+            queryCommand.add_group((int)HttpContext.Session["userSessionID"], privacyModel.group);
+            return RedirectToAction("Index");
+        }
+
+        //
+        // GET: /Privacy/RemoveGroup
+        [Authorize]
+        public ActionResult RemoveGroup()
+        {
+            PrivacyModel group_data = new PrivacyModel { groups = new List<string>() };
+            QueryController queryCommand = new QueryController();
+            group_data.groups = queryCommand.get_friendship((int)HttpContext.Session["userSessionID"]);
+            return View(group_data);
+        }
+
+        //
+        // POST: /Privacy/RemoveUserGroup
+        [HttpPost]
+        public ActionResult RemoveUserGroup(PrivacyModel privacyModel)
+        {
+            QueryController queryCommand = new QueryController();
+            queryCommand.remove_group((int)HttpContext.Session["userSessionID"], privacyModel.group);
+            return RedirectToAction("Index");
+        }
     }
 }
