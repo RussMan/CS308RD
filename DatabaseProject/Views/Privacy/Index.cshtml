@@ -3,18 +3,17 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_PrivacyLayout.cshtml";
-    //testing
-    List<int>numbers = new List<int>();
-    List<SelectListItem> choices = new List<SelectListItem>();
-    numbers.Add(1);
-    numbers.Add(2);
-    numbers.Add(3);
-    numbers.Add(4);
-    numbers.Add(5);
-    foreach(int y in numbers)
+}
+
+@{
+    List<SelectListItem> group_lst = new List<SelectListItem>();
+
+    foreach (var x in Model.groups)
     {
-        choices.Add(new SelectListItem {Text=y.ToString(), Value=y.ToString()});
+        group_lst.Add(new SelectListItem() { Text = x, Value = x, Selected = false });   
     }
+
+    SelectList groups = new SelectList(group_lst, "Value", "Text");
 }
 
 <h3>Your Groups</h3>
@@ -22,7 +21,7 @@
 {
     <fiedset>
         <div class="input-append">
-            @Html.DropDownListFor(m=>m.group, (IEnumerable<SelectListItem>)choices, "--select a group--")
+            @Html.DropDownListFor(m => m.group, groups)
             <button class="btn" type="submit"><i class="icon-search"></i></button>
         </div>
     </fiedset>

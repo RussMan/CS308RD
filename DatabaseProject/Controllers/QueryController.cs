@@ -212,6 +212,98 @@ namespace DatabaseProject.Controllers
 
             return friends;
         }
+
+        public List<KeyValuePair<int, KeyValuePair<string, string>>> get_users(int pid, string group)
+        {
+            List<KeyValuePair<int, KeyValuePair<string, string>>> users = new List<KeyValuePair<int, KeyValuePair<string, string>>>();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
+                {
+                    if (connection.State != System.Data.ConnectionState.Open)
+                        connection.Open();
+                    MySqlCommand command = new MySqlCommand("SELECT pid, fname, lname FROM person WHERE pid IN (SELECT reader FROM friend WHERE poster = " + pid + " AND ftype = '" + group + "');", connection);
+                    MySqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        users.Add(new KeyValuePair<int, KeyValuePair<string, string>>(dr.GetInt32("pid"), new KeyValuePair<string, string>(dr.GetString("fname"), dr.GetString("lname"))));
+                    }
+                    dr.Close();
+                    connection.Close();//Added close because it was always open
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return users;
+        }
+
+        public List<KeyValuePair<int, KeyValuePair<string, string>>> get_other_users(int pid, string group)
+        {
+            List<KeyValuePair<int, KeyValuePair<string, string>>> users = new List<KeyValuePair<int, KeyValuePair<string, string>>>();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
+                {
+                    if (connection.State != System.Data.ConnectionState.Open)
+                        connection.Open();
+                    MySqlCommand command = new MySqlCommand("SELECT pid, fname, lname FROM person WHERE pid NOT IN (SELECT reader FROM friend WHERE poster = " + pid + " AND ftype = '" + group + "');", connection);
+                    MySqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        users.Add(new KeyValuePair<int, KeyValuePair<string, string>>(dr.GetInt32("pid"), new KeyValuePair<string, string>(dr.GetString("fname"), dr.GetString("lname"))));
+                    }
+                    dr.Close();
+                    connection.Close();//Added close because it was always open
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return users;
+        }
+
+        public void add_to_group(int poster, string reader, string ftype)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
+                {
+                    if (connection.State != System.Data.ConnectionState.Open)
+                        connection.Open();
+                    MySqlCommand command = new MySqlCommand("INSERT INTO friend(poster, reader, ftype) VALUES(" + poster + ", " + reader + ", '" + ftype + "');", connection);
+                    command.ExecuteNonQuery();
+                    connection.Close(); 
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public void remove_from_group(int poster, string reader, string ftype)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnString"].ConnectionString))
+                {
+                    if (connection.State != System.Data.ConnectionState.Open)
+                        connection.Open();
+                    MySqlCommand command = new MySqlCommand("DELETE FROM friend WHERE poster = " + poster + " AND reader = " + reader + " AND ftype = '" + ftype + "';", connection);
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
         /*****************************************************************************************
          *                                POSTING RELATED ACTIONS                                *
          *****************************************************************************************/

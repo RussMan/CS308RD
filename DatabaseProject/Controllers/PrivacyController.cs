@@ -14,7 +14,10 @@ namespace DatabaseProject.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            return View();
+            PrivacyModel group_data = new PrivacyModel { groups = new List<string>() };
+            QueryController queryCommand = new QueryController();
+            group_data.groups = queryCommand.get_friendship((int)HttpContext.Session["userSessionID"]);
+            return View(group_data);
         }
 
         //
@@ -23,16 +26,20 @@ namespace DatabaseProject.Controllers
         [HttpPost]
         public ActionResult ViewGroupUsers(PrivacyModel privacyModel)
         {
-            //Add your query command here using the 'group' parameter
-            //return Content(privacyModel.group);
-            return View();
+            privacyModel.users = new List<KeyValuePair<int, KeyValuePair<string, string>>>();
+            QueryController queryCommand = new QueryController();
+            privacyModel.users = queryCommand.get_users((int)HttpContext.Session["userSessionID"], privacyModel.group);
+            return View(privacyModel);
         }
 
         //
         // GET: /Privacy/Add
         public ActionResult Add()
         {
-            return View();
+            PrivacyModel group_data = new PrivacyModel { groups = new List<string>() };
+            QueryController queryCommand = new QueryController();
+            group_data.groups = queryCommand.get_friendship((int)HttpContext.Session["userSessionID"]);
+            return View(group_data);
         }
 
         //
@@ -40,15 +47,11 @@ namespace DatabaseProject.Controllers
         [HttpPost]
         public ActionResult AddToGroup(PrivacyModel privacyModel)
         {
-            try
-            {
-                // TODO: Add insert logic here that presents users NOT in selected group
-                return View();
-            }
-            catch
-            {
-                return RedirectToAction("Add"); // User list query fails, ask again group
-            }
+            privacyModel.users = new List<KeyValuePair<int, KeyValuePair<string, string>>>();
+            HttpContext.Session["userGroup"] = privacyModel.group;
+            QueryController queryCommand = new QueryController();
+            privacyModel.users = queryCommand.get_other_users((int)HttpContext.Session["userSessionID"], privacyModel.group);
+            return View(privacyModel);
         }
 
         //
@@ -56,21 +59,18 @@ namespace DatabaseProject.Controllers
         [HttpPost]
         public ActionResult AddUserToGroup(PrivacyModel privacyModel)
         {
-            try
-            {
-                // TODO: Add insert logic there that includes selected user into selected group
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return RedirectToAction("AddToGroup"); // Insert query fails, ask again for user 
-            }
+            QueryController queryCommand = new QueryController();
+            queryCommand.add_to_group((int)HttpContext.Session["userSessionID"], privacyModel.user, (string)HttpContext.Session["userGroup"]);
+            return RedirectToAction("Index");
         }
         //
         // GET: /Privacy/Remove/
         public ActionResult Remove()
         {
-            return View(); // Presents user with groups to delet user from
+            PrivacyModel group_data = new PrivacyModel { groups = new List<string>() };
+            QueryController queryCommand = new QueryController();
+            group_data.groups = queryCommand.get_friendship((int)HttpContext.Session["userSessionID"]);
+            return View(group_data);
         }
 
         //
@@ -78,29 +78,19 @@ namespace DatabaseProject.Controllers
         [HttpPost]
         public ActionResult RemoveUser(PrivacyModel privacyModel)
         {
-            try
-            {
-                //TODO: Use query here that pulls in relevant group to remove from
-                return View(); // Presents users in selected group
-            }
-            catch
-            {
-                return RedirectToAction("Remove"); // Query failed...Ask for group again
-            }
+            privacyModel.users = new List<KeyValuePair<int, KeyValuePair<string, string>>>();
+            HttpContext.Session["userGroup"] = privacyModel.group;
+            QueryController queryCommand = new QueryController();
+            privacyModel.users = queryCommand.get_users((int)HttpContext.Session["userSessionID"], privacyModel.group);
+            return View(privacyModel);
         }
 
         [HttpPost]
         public ActionResult RemoveUserFromGroup(PrivacyModel privacyModel)
         {
-            try
-            {
-                // TODO: User query here that removes user from current group
-                return RedirectToAction("Index"); // Returns to main page of Privacy section after successful deletion
-            }
-            catch
-            {
-                return RedirectToAction("RemoveUser"); // Query failed for some reason...Ask for user again
-            }
+            QueryController queryCommand = new QueryController();
+            queryCommand.remove_from_group((int)HttpContext.Session["userSessionID"], privacyModel.user, (string)HttpContext.Session["userGroup"]);
+            return RedirectToAction("Index");
         }
     }
 }
